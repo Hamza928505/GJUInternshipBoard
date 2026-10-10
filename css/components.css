@@ -83,8 +83,8 @@ main { display: flex; flex-direction: column; gap: 44px; padding-block: 40px 24p
 /* ---------------------------------------------------------------- charts */
 
 .chart-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
-.chart-card { grid-column: span 4; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-1); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-.chart-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); border-color: color-mix(in srgb, var(--primary) 38%, var(--border)); }
+.chart-card { grid-column: span 4; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-2); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.chart-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-3); border-color: color-mix(in srgb, var(--primary) 38%, var(--border)); }
 .chart-card.w5 { grid-column: span 5; } .chart-card.w3 { grid-column: span 3; } .chart-card.w6 { grid-column: span 6; }
 .chart-head { display: flex; align-items: center; gap: 12px; }
 .chart-head h3 { font-size: 1rem; }
