@@ -1,2 +1,2 @@
-vendor/* -text
+vendor/** -text
 *.json text eol=lf
