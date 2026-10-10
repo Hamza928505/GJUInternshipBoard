@@ -34,6 +34,8 @@
   function applyFilters(postings, f) {
     var q = (f.q || "").trim().toLowerCase();
     var skills = (f.skills || []).map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    var num = function (v) { return v === "" || v == null || !isFinite(Number(v)) ? null : Number(v); };
+    var minPay = num(f.minPay), maxPay = num(f.maxPay);
     return postings.filter(function (p) {
       if (q && !(p.title + " " + p.company + " " + p.city).toLowerCase().includes(q)) return false;
       if (f.major && !(p.majors || []).includes(f.major)) return false;
@@ -43,6 +45,12 @@
       if (skills.length) {
         var have = (p.skills || []).map(function (s) { return s.toLowerCase(); });
         if (!skills.every(function (s) { return have.includes(s); })) return false;
+      }
+      // A pay range only keeps postings that state a pay and whose stated range overlaps it.
+      if (minPay != null || maxPay != null) {
+        if (!p.pay) return false;
+        if (minPay != null && p.pay.max < minPay) return false;
+        if (maxPay != null && p.pay.min > maxPay) return false;
       }
       if (f.gju === "meets" && !(p.gju && p.gju.overall === "meets")) return false;
       if (f.gju === "hide-fails" && p.gju && p.gju.overall === "fails") return false;
