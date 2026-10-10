@@ -30,7 +30,7 @@ published.
 | `board/majors.json` | The 22 GJU bachelor programs and the job-title words used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included yet. |
 | `board/skill-aliases.json` | Other ways adverts write a skill (mostly German), mapped to the profile editor's skill names. |
 | `data/postings.json` | Every active internship (dropped after 45 days unseen). |
-| `data/days/YYYY-MM-DD.json` | The internships first seen that day, for "download one day". |
+| `data/days/YYYY-MM-DD.json` | The internships first published that day (as far as the board knows), for "download one day". |
 | `data/index.json` | Totals, the list of days, what the last run covered, and an optional `notice` shown as a banner. |
 | `data/skills.json`, `data/rules.json` | The skill menu's groups (from the editor's skill library) and the GJU numbers the page explains (copied from the German Year rules file). |
 
@@ -49,8 +49,8 @@ is not stated. Students must always confirm with their department.
 ## How the data is produced
 
 A private runner (outside this repo) searches job sites within a daily credit budget, rotating through areas and
-sites, and writes the `data/` files. This repo holds no keys and no personal data. To have an internship removed,
-open an issue.
+sites, and writes the `data/` files. The same internship found on two sites is listed once. This repo holds no keys
+and no personal data. To have an internship removed, open an issue.
 
 ## Looking at it
 
