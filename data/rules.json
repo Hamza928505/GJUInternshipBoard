@@ -1,0 +1,10 @@
+{
+ "minWeeks": 20,
+ "minMonthlySalary": 861,
+ "approvedCountries": [
+  "Germany",
+  "Austria",
+  "Switzerland",
+  "Luxembourg"
+ ]
+}

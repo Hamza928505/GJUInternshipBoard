@@ -1,0 +1,29 @@
+{
+ "generatedAt": "2026-10-10",
+ "total": 3,
+ "days": [
+  {
+   "date": "2026-10-10",
+   "count": 3
+  }
+ ],
+ "lastRun": {
+  "date": "2026-10-10",
+  "areas": [
+   "Business"
+  ],
+  "platforms": [
+   "Jobworld",
+   "meinestadt.de",
+   "meinpraktikum.de",
+   "Praktikumsstellen",
+   "praktika.de",
+   "praktikum.info",
+   "praktikum.de",
+   "connecticum"
+  ],
+  "found": 3,
+  "added": 3,
+  "complete": true
+ }
+}

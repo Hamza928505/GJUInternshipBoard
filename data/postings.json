@@ -1,0 +1,110 @@
+[
+ {
+  "id": "d2896cfb7e90",
+  "title": "Praktikum \"Marketing, Sponsoring, Event- und Projektmanagement\"",
+  "company": "Handball-Bundesliga GmbH",
+  "city": "Köln",
+  "country": "Germany",
+  "url": "https://www.praktika.de/praktikum/praktikum-marketing-sponsoring-event-und-projektmanagement-140083",
+  "source": "praktika.de",
+  "kind": "Praktikum",
+  "datePosted": "2026-10-02",
+  "firstSeen": "2026-10-10",
+  "lastSeen": "2026-10-10",
+  "majors": [
+   "management-science"
+  ],
+  "skills": [
+   "Microsoft Excel",
+   "Project Management",
+   "Marketing"
+  ],
+  "weeks": {
+   "min": 26,
+   "max": 26
+  },
+  "pay": null,
+  "germanLevel": "unknown",
+  "englishLevel": "B2",
+  "gju": {
+   "weeks": "yes",
+   "pay": "unknown",
+   "country": "approved",
+   "overall": "check"
+  }
+ },
+ {
+  "id": "df75eafdd6e9",
+  "title": "Praktikum im Bereich Logistik & Kundenauftragsabwicklung / Internship Logistics & Supply Chain",
+  "company": "Alfred Kärcher GmbH & Co. KG",
+  "city": "Obersontheim",
+  "country": "Germany",
+  "url": "https://www.meinpraktikum.de/stellen/praktikum-im-bereich-logistik-kundenauftragsabwicklung-internship-logistics-supply-chain-bei-alfred-kaercher-gmbh-co-kg-in-obersontheim-2f4899f5-3c6e-4b8f-b9d1-5f148bf16732",
+  "source": "meinpraktikum.de",
+  "kind": "Praktikum",
+  "datePosted": "2026-10-09",
+  "firstSeen": "2026-10-10",
+  "lastSeen": "2026-10-10",
+  "majors": [
+   "logistic-sciences",
+   "management-science"
+  ],
+  "skills": [
+   "Supply Chain Management",
+   "Logistics",
+   "SAP ERP"
+  ],
+  "weeks": null,
+  "pay": null,
+  "germanLevel": "C1",
+  "englishLevel": "C1",
+  "gju": {
+   "weeks": "unknown",
+   "pay": "unknown",
+   "country": "approved",
+   "overall": "check"
+  }
+ },
+ {
+  "id": "f79db7b38991",
+  "title": "Praktikum Logistik Supply Chain Management – Datenmanagement & Prozesssteuerung (m/w/d)",
+  "company": "EDEKA Zentrale Stiftung & Co. KG",
+  "city": "Hamburg",
+  "country": "Germany",
+  "url": "https://www.meinpraktikum.de/stellen/praktikum-logistik-supply-chain-management-datenmanagement-prozesssteuerung-mwd-bei-edeka-zentrale-stiftung-co-kg-in-hamburg-06c97bc7-e4f0-4caa-a578-db8b4414e287",
+  "source": "meinpraktikum.de",
+  "kind": "Praktikum",
+  "datePosted": "2026-10-01",
+  "firstSeen": "2026-10-10",
+  "lastSeen": "2026-10-10",
+  "majors": [
+   "logistic-sciences",
+   "management-science"
+  ],
+  "skills": [
+   "Microsoft Excel",
+   "Power BI",
+   "Supply Chain Management",
+   "Logistics",
+   "Microsoft Office",
+   "Microsoft PowerPoint"
+  ],
+  "weeks": {
+   "min": 22,
+   "max": 22
+  },
+  "pay": {
+   "min": 1200,
+   "max": 1200,
+   "basis": "monthly"
+  },
+  "germanLevel": "unknown",
+  "englishLevel": "unknown",
+  "gju": {
+   "weeks": "yes",
+   "pay": "yes",
+   "country": "approved",
+   "overall": "meets"
+  }
+ }
+]
