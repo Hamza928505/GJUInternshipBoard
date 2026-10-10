@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GJU Internship Board</title>
+<meta name="description" content="Daily-updated internship and Werkstudent postings in Germany for German Jordanian University students, filterable by major, language level and the GJU German Year rules.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>GJU Internship Board</h1>
+  <p class="lede">Internships and Werkstudent jobs in Germany, collected daily for every GJU major. Filter them, then download what you see as an Excel file.</p>
+  <p id="status" class="status" role="status" aria-live="polite">Loading…</p>
+</header>
+
+<main>
+  <section class="filters" aria-label="Filters">
+    <div class="field wide"><label for="q">Search title, company or city</label><input id="q" type="search" autocomplete="off"></div>
+    <div class="field"><label for="major">Major</label><select id="major"></select></div>
+    <div class="field"><label for="type">Position type</label><select id="type"></select></div>
+    <div class="field"><label for="country">Country</label><select id="country"></select></div>
+    <div class="field"><label for="german">My German level</label><select id="german"></select></div>
+    <div class="field"><label for="english">My English level</label><select id="english"></select></div>
+    <div class="field wide"><label for="skills">Skills (comma separated, all must match)</label><input id="skills" type="text" list="skill-list" autocomplete="off" placeholder="e.g. Python, SQL"><datalist id="skill-list"></datalist></div>
+    <div class="field"><label for="gju">GJU German Year rules</label>
+      <select id="gju"><option value="">Show everything</option><option value="hide-fails">Hide jobs that break a rule</option><option value="meets">Only jobs that meet every rule</option></select></div>
+    <div class="field"><label for="from">First seen from</label><input id="from" type="date"></div>
+    <div class="field"><label for="to">First seen to</label><input id="to" type="date"></div>
+    <div class="field"><label for="sort">Sort by</label>
+      <select id="sort"><option value="new">Newest first</option><option value="company">Company A–Z</option><option value="weeks">Longest duration</option><option value="pay">Highest pay</option></select></div>
+    <div class="actions"><button id="reset" type="button" class="quiet">Clear filters</button></div>
+  </section>
+
+  <section class="downloads" aria-label="Downloads">
+    <h2>Download as Excel</h2>
+    <div class="buttons">
+      <button id="dl-filter" type="button">What I see now (<span id="dl-count">0</span>)</button>
+      <button id="dl-all" type="button">Everything</button>
+      <span class="day"><label for="day">One day</label> <select id="day"></select> <button id="dl-day" type="button">Download</button></span>
+    </div>
+    <p class="note">Each file has one row per posting with a link to the original advert. Opening a link takes you to the employer's or job site's own page.</p>
+  </section>
+
+  <section aria-label="Results">
+    <p id="count" class="count" aria-live="polite"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Position</th><th>Company</th><th>City</th><th>Duration</th><th>Pay / month</th><th>German</th><th>English</th><th>GJU rules</th><th>Found</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p><button id="more" type="button" class="quiet" hidden>Show more</button></p>
+  </section>
+</main>
+
+<footer>
+  <p><strong>How to read this.</strong> Duration, pay, language level and country are read from the advert text by fixed rules, not guessed. "Not stated" means the advert did not say. <em>Check</em> under GJU rules means something is missing; open the advert and confirm it yourself. The rules are the 20-week minimum, 861 EUR per month and the approved-country list from the GJU German Year documents. Always check with your department before relying on a posting.</p>
+  <p>Postings are linked to, not copied. No contact details are published. No cookies, no tracking. To have a posting removed, contact the maintainer through the repository.</p>
+</footer>
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="board-logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
