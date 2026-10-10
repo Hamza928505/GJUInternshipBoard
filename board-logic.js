@@ -147,18 +147,15 @@
       .sort(function (a, b) { return b.count - a.count || String(a.key).localeCompare(String(b.key)); }).slice(0, n);
   };
 
-  /** The duration buckets of the weeks chart; "ok" ones reach the GJU minimum. */
-  function weeksBuckets(list) {
-    var buckets = [
-      { key: "unknown", label: "n/a", count: 0, tone: "unknown" }, { key: "under13", label: "<13", count: 0, tone: "low" },
-      { key: "w13", label: "13–19", count: 0, tone: "low" }, { key: "w20", label: "20–26", count: 0, tone: "ok" }, { key: "w27", label: "27+", count: 0, tone: "ok" },
-    ];
+  /** Postings per area of study: one that fits majors of two areas counts once in each. `areaOf` maps a major id to its area. */
+  function areaCounts(list, areaOf) {
+    var counts = new Map();
     list.forEach(function (p) {
-      var t = p.weeks ? (p.weeks.max != null ? p.weeks.max : p.weeks.min) : null;
-      var i = t == null ? 0 : t < 13 ? 1 : t < 20 ? 2 : t < 27 ? 3 : 4;
-      buckets[i].count++;
+      var areas = new Set();
+      (p.majors || []).forEach(function (m) { if (areaOf[m]) areas.add(areaOf[m]); });
+      areas.forEach(function (a) { counts.set(a, (counts.get(a) || 0) + 1); });
     });
-    return buckets;
+    return counts;
   }
 
   function levelCounts(list, field) {
@@ -181,7 +178,7 @@
 
   /**
    * The numbers behind the charts. Each chart that can be clicked to filter ignores its own filter,
-   * so the bars of a chosen major still show the other majors.
+   * so the bars of a chosen major still show the other majors. `o.areaOf` maps a major id to its area.
    */
   function chartData(all, f, o) {
     o = o || {};
@@ -191,10 +188,10 @@
     return {
       total: current.length,
       majors: top(facetCounts(all, f, "majors"), o.majors || 8),
+      areas: top(areaCounts(applyFilters(all, f, "majors"), o.areaOf || {}), 99),
       skills: top(facetCounts(all, f, "skills"), o.skills || 8),
       gju: gju,
       days: perDay(current, o.days || 14, o.end),
-      weeks: weeksBuckets(current),
       german: levelCounts(current, "germanLevel"),
     };
   }
@@ -278,7 +275,7 @@
     LEVELS: LEVELS, LEVEL_NAMES: LEVEL_NAMES, KINDS: KINDS, GJU_LABELS: GJU_LABELS,
     norm: norm, rank: rank, levelOk: levelOk, formatWeeks: formatWeeks, formatPay: formatPay, safeUrl: safeUrl,
     defaultFilters: defaultFilters, activeCount: activeCount, applyFilters: applyFilters, sortPostings: sortPostings,
-    facetCounts: facetCounts, chartData: chartData, weeksBuckets: weeksBuckets, perDay: perDay, ruleLines: ruleLines,
+    facetCounts: facetCounts, chartData: chartData, areaCounts: areaCounts, perDay: perDay, ruleLines: ruleLines,
     ago: ago, initials: initials, hue: hue, toRows: toRows,
   };
 });

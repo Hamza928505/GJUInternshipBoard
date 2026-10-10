@@ -1,25 +1,30 @@
 /* The six charts, drawn with OpenCharts (https://github.com/Hamza928505/OpenCharts, vendored under vendor/opencharts).
  * The library arrives on demand; if it cannot load, the page simply has no charts. A chart that can be clicked
- * (majors, skills, the GJU split) hands the click back to the page, which sets the matching filter. */
+ * (majors, skills, areas, the GJU split) hands the click back to the page, which sets the matching filter. */
 const L = window.BoardLogic;
 const $ = (id) => document.getElementById(id);
 
 const AXIS = { format: "plain", locale: "", scale: "linear", min: "", max: "" };
-const COLORS = { meets: "#22c55e", check: "#f59e0b", fails: "#ef4444", unknown: "#94a3b8", brand: "#6366f1", violet: "#8b5cf6" };
+const COLORS = { meets: "#22c55e", check: "#f59e0b", fails: "#ef4444", brand: "#0a89c9", amber: "#f6a800" }; // the blue and the amber of the GJU logo
 const GJU_ORDER = ["meets", "check", "fails"];
+const AREA_COLORS = ["#0a89c9", "#f6a800", "#0a5f96", "#ff8a1f", "#4fc3f0", "#7a8fa3", "#c98300", "#9bd6f2"];
+
+/** An area keeps its colour whatever the filters: it comes from the area's place in the majors file, here and in the page's legend. */
+export const areaColor = (area, order) => AREA_COLORS[Math.max(0, order.indexOf(area)) % AREA_COLORS.length];
 
 const hex = (n) => n.toString(16).padStart(2, "0");
 const mix = (a, b, t) => {
   const c = (s, i) => parseInt(s.slice(1 + i * 2, 3 + i * 2), 16);
   return "#" + [0, 1, 2].map((i) => hex(Math.round(c(a, i) + (c(b, i) - c(a, i)) * t))).join("");
 };
-/** n colours from indigo to cyan, so a ranking reads as a gradient. */
-const ramp = (n) => Array.from({ length: n }, (_, i) => mix("#6366f1", "#22d3ee", n < 2 ? 0 : i / (n - 1)));
+/** n colours from one end to the other, so a ranking reads as a gradient: GJU blue for majors, GJU amber for skills. */
+const BLUES = ["#0a89c9", "#7fd0f5"], AMBERS = ["#f09000", "#ffd36b"];
+const ramp = (n, [from, to]) => Array.from({ length: n }, (_, i) => mix(from, to, n < 2 ? 0 : i / (n - 1)));
 const shorten = (text, max) => (text.length > max ? text.slice(0, max - 1).trimEnd() + "…" : text);
 /** An axis from 0; counts of four or fewer get a 0-5 axis, so the ticks are whole numbers. Larger counts scale themselves. */
 const axisFor = (max) => ({ ...AXIS, min: 0, max: max <= 4 ? 5 : "" });
 
-export async function createCharts({ majorNames, onPick }) {
+export async function createCharts({ majorNames, areaOrder = [], onPick }) {
   let oc;
   try { oc = await import("../vendor/opencharts/js/studio/oc.js"); } catch (error) { console.warn("Charts could not be loaded:", error); return null; }
   const opts = (id, own) => ({ ...oc.newSpec(oc.getChart(id)).opts, ...own });
@@ -29,7 +34,7 @@ export async function createCharts({ majorNames, onPick }) {
     gju: { host: $("ch-gju"), chart: "doughnut", height: 190 },
     skills: { host: $("ch-skills"), chart: "bar-horizontal", height: 270 },
     days: { host: $("ch-days"), chart: "area-basic", height: 250 },
-    weeks: { host: $("ch-weeks"), chart: "bar-stacked", height: 230 },
+    areas: { host: $("ch-areas"), chart: "polar-area", height: 170 },
     german: { host: $("ch-german"), chart: "bar-vertical", height: 230 },
   };
   for (const slot of Object.values(slots)) { slot.card = slot.host.closest(".chart-card"); slot.empty = slot.card.querySelector(".chart-empty"); }
@@ -38,6 +43,7 @@ export async function createCharts({ majorNames, onPick }) {
   function show(key, spec, picks) {
     const slot = slots[key];
     slot.picks = picks;
+    if (spec) spec.effects = { gradient: 0.9, glow: 0.45, shadow: 0.4, ...spec.effects }; // fills fade from the colour to a lighter shade
     const nothing = !spec;
     slot.empty.hidden = !nothing;
     slot.host.hidden = nothing;
@@ -53,7 +59,7 @@ export async function createCharts({ majorNames, onPick }) {
   }
 
   // a click on a bar or slice, and a pointer cursor over one
-  const clickable = new Set(["majors", "gju", "skills"]);
+  const clickable = new Set(["majors", "gju", "skills", "areas"]);
   for (const key of clickable) {
     const { host } = slots[key];
     const hit = (event) => {
@@ -68,12 +74,12 @@ export async function createCharts({ majorNames, onPick }) {
     host.addEventListener("mousemove", (event) => { host.style.cursor = hit(event).length ? "pointer" : "default"; });
   }
 
-  function ranking(key, list, label, name) {
+  function ranking(key, list, label, name, shades) {
     if (!list.length) return show(key, null);
     const max = Math.max(...list.map((x) => x.count));
     const room = window.innerWidth < 700 ? 17 : 28; // long names would be cut off at the left edge of a phone
     show(key, {
-      labels: list.map((x) => shorten(name(x.key), room)), values: list.map((x) => x.count), colors: ramp(list.length),
+      labels: list.map((x) => shorten(name(x.key), room)), values: list.map((x) => x.count), colors: ramp(list.length, shades),
       opts: opts("bar-horizontal", { radius: 7, thickness: 0.7, prefix: "", suffix: "", separator: false, label, axis: axisFor(max) }),
     }, list.map((x) => x.key));
   }
@@ -81,8 +87,8 @@ export async function createCharts({ majorNames, onPick }) {
   return {
     /** Redraw every chart for `data` (from BoardLogic.chartData). Resolves when they are all drawn. */
     async update(data) {
-      ranking("majors", data.majors, "Internships", (id) => majorNames[id] || id);
-      ranking("skills", data.skills, "Internships", (name) => name);
+      ranking("majors", data.majors, "Internships", (id) => majorNames[id] || id, BLUES);
+      ranking("skills", data.skills, "Internships", (name) => name, AMBERS);
 
       const split = GJU_ORDER.map((k) => data.gju[k]);
       show("gju", split.some(Boolean) ? { labels: GJU_ORDER.map((k) => L.GJU_LABELS[k]), values: split, colors: GJU_ORDER.map((k) => COLORS[k]), opts: opts("doughnut", { cutout: 72, borderWidth: 0, hoverOffset: 8 }) } : null, GJU_ORDER);
@@ -94,21 +100,15 @@ export async function createCharts({ majorNames, onPick }) {
         opts: opts("area-basic", { curve: "smooth", tension: 0.4, fill: true, fillAlpha: 0.24, points: true, pointRadius: 3, lineWidth: 2.5, prefix: "", suffix: "", separator: false, axis: axisFor(busiest), maxLabels: 7 }),
       } : null);
 
-      const tone = (t) => data.weeks.map((b) => (b.tone === t ? b.count : 0));
-      show("weeks", data.total ? {
-        labels: data.weeks.map((b) => b.label),
-        series: [
-          { label: "Not stated", color: COLORS.unknown, data: tone("unknown") },
-          { label: "Below 20 weeks", color: COLORS.check, data: tone("low") },
-          { label: "Reaches 20 weeks", color: COLORS.meets, data: tone("ok") },
-        ],
-        opts: opts("bar-stacked", { radius: 6, thickness: 0.7, decimals: 0, prefix: "", suffix: "", separator: false, axis: axisFor(Math.max(...data.weeks.map((b) => b.count))) }),
-      } : null);
+      show("areas", data.areas.length ? {
+        labels: data.areas.map((a) => a.key), values: data.areas.map((a) => a.count), colors: data.areas.map((a) => areaColor(a.key, areaOrder)),
+        opts: opts("polar-area", { alpha: 0.85 }),
+      } : null, data.areas.map((a) => a.key));
 
       const names = { none: "None", unknown: "n/a" };
       show("german", data.total ? {
         labels: data.german.map((x) => names[x.key] || x.key),
-        series: [{ label: "Internships", color: COLORS.violet, data: data.german.map((x) => x.count) }],
+        series: [{ label: "Internships", color: COLORS.amber, data: data.german.map((x) => x.count) }],
         opts: opts("bar-vertical", { radius: 6, thickness: 0.7, outline: false, prefix: "", suffix: "", separator: false, axis: axisFor(Math.max(...data.german.map((x) => x.count))) }),
       } : null);
 

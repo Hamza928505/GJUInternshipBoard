@@ -1,7 +1,7 @@
 /* The GJU Internship Board page: loads the data files, builds the filters, draws the list and the charts.
  * Everything runs in the browser; the data files are plain JSON next to the page. */
 import { Combo } from "./combo.js";
-import { createCharts } from "./charts.js";
+import { createCharts, areaColor } from "./charts.js";
 import { el, icon, theme, toast, invalid, notice, pickDay, showDetails, showHelp, showMenu, closeMenu, copyText, countUp, revealOnScroll } from "./ui.js";
 
 const L = window.BoardLogic;
@@ -12,6 +12,7 @@ const DEFAULT_RULES = { minWeeks: 20, minMonthlySalary: 861, approvedCountries: 
 
 const state = {
   all: [], byId: new Map(), index: { days: [], generatedAt: "" }, rules: DEFAULT_RULES, majorNames: {}, cityNames: {},
+  areaOrder: [], areaOf: {}, areaMajors: {}, // the areas of study, the area of each major, and the majors of each area
   f: L.defaultFilters(), sort: "new", view: "table", filtered: [], shown: 0, selected: new Set(), body: null,
 };
 const combos = {};
@@ -547,6 +548,32 @@ function pickFromChart(chart, value) {
   if (chart === "majors") change("majors", f.majors.includes(value) ? f.majors.filter((x) => x !== value) : [...f.majors, value]);
   else if (chart === "skills") change("skills", f.skills.includes(value) ? f.skills.filter((x) => x !== value) : [...f.skills, value]);
   else if (chart === "gju") change("gju", f.gju === value ? "" : value);
+  else if (chart === "areas") {
+    // an area selects all its majors; when they are all selected already, it clears them
+    const ids = state.areaMajors[value] || [];
+    const chosen = ids.length > 0 && ids.every((id) => f.majors.includes(id));
+    change("majors", chosen ? f.majors.filter((id) => !ids.includes(id)) : [...new Set([...f.majors, ...ids])]);
+  }
+}
+
+/** The legend of the areas chart: a button per area with its count, pressed when all of the area's majors are chosen. */
+function drawAreas(data) {
+  const legend = $("area-legend");
+  legend.replaceChildren();
+  for (const { key, count } of data.areas) {
+    const ids = state.areaMajors[key] || [];
+    const li = el("li");
+    const b = el("button");
+    b.type = "button";
+    b.title = `${key}: ${plural(count, "internship", "internships")}`;
+    b.setAttribute("aria-pressed", String(ids.length > 0 && ids.every((id) => state.f.majors.includes(id))));
+    const dot = el("span", "dot");
+    dot.style.background = areaColor(key, state.areaOrder);
+    b.append(dot, el("span", "name", key), el("b", null, String(count)));
+    b.addEventListener("click", () => pickFromChart("areas", key));
+    li.append(b);
+    legend.append(li);
+  }
 }
 
 function drawDonut(data) {
@@ -574,8 +601,9 @@ let chartTimer;
 function scheduleCharts() { clearTimeout(chartTimer); chartTimer = setTimeout(drawCharts, 160); }
 
 async function drawCharts() {
-  const data = L.chartData(state.all, state.f, { end: (state.index.generatedAt || "").slice(0, 10) || undefined, days: 14 });
+  const data = L.chartData(state.all, state.f, { end: (state.index.generatedAt || "").slice(0, 10) || undefined, days: 14, areaOf: state.areaOf });
   drawDonut(data);
+  drawAreas(data);
   if (!charts) return;
   await charts.update(data);
   $("insights").dataset.drawn = String(Number($("insights").dataset.drawn || 0) + 1);
@@ -626,7 +654,12 @@ async function start() {
   state.byId = new Map(data.postings.map((p) => [p.id, p]));
   state.index = data.index;
   state.rules = { ...DEFAULT_RULES, ...data.rules };
-  data.majors.majors.forEach((m) => { state.majorNames[m.id] = m.name; });
+  state.areaOrder = data.majors.areas.slice();
+  data.majors.majors.forEach((m) => {
+    state.majorNames[m.id] = m.name;
+    state.areaOf[m.id] = m.area;
+    (state.areaMajors[m.area] = state.areaMajors[m.area] || []).push(m.id);
+  });
 
   if (data.index.notice) { const n = $("notice"); n.replaceChildren(icon("fa-circle-info"), document.createTextNode(` ${data.index.notice}`)); n.hidden = false; }
   buildCombos({ majors: data.majors, skills: data.skills });
@@ -648,7 +681,7 @@ async function start() {
 
   // the charts load after the page is usable; without them everything else still works
   (window.requestIdleCallback || ((fn) => setTimeout(fn, 60)))(async () => {
-    charts = await createCharts({ majorNames: state.majorNames, onPick: pickFromChart });
+    charts = await createCharts({ majorNames: state.majorNames, areaOrder: state.areaOrder, onPick: pickFromChart });
     if (charts) drawCharts();
   });
 }
