@@ -11,8 +11,8 @@ published.
   sort): type to narrow the list, arrow keys and Enter to pick, counts that follow the other filters, grouped
   options, and a sheet at the top of the screen on phones.
 - **Charts** drawn with [OpenCharts](https://github.com/Hamza928505/OpenCharts): internships by major, the GJU
-  split, most asked skills, new internships per day, duration and required German level. They follow the
-  filters, and a click on a bar or slice sets that filter.
+  split, most asked skills, new internships per day, internships by area of study and required German level. They
+  follow the filters, and a click on a bar or slice sets that filter (a click on an area chooses all its majors).
 - **GJU check** per internship (duration, pay, country), explained in a details window; a **table** and a **card**
   view; tick rows and download **what you see, what you ticked, everything, or one day** as `.xlsx`.
 - Values that cannot be used (a pay range the wrong way round, a duration or dates out of range) get a
