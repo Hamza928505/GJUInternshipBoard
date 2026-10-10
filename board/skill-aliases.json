@@ -117,7 +117,8 @@
       "Energiemanagement"
     ],
     "Embedded Systems": [
-      "Embedded",
+      "Embedded Software",
+      "Embedded-Software",
       "Eingebettete Systeme"
     ],
     "Microcontrollers": [
@@ -171,8 +172,10 @@
       "Patientenbetreuung"
     ],
     "Nursing Care": [
-      "Pflege",
       "Krankenpflege",
+      "Altenpflege",
+      "Pflegefachkraft",
+      "Pflegekraft",
       "Gesundheits- und Krankenpflege"
     ],
     "Hygiene Standards": [
