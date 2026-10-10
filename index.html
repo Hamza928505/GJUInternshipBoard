@@ -2,88 +2,180 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GJU Internship Board</title>
-<meta name="description" content="Daily-updated internship and Werkstudent postings in Germany for German Jordanian University students, filterable by major, language level and the GJU German Year rules.">
-<link rel="stylesheet" href="style.css">
+<meta name="description" content="Daily-updated internships in Germany for German Jordanian University students: filter by major, skills and language level, check them against the German Year rules, and download them as Excel.">
+<meta name="theme-color" content="#3b3fd6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235458ee'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M16 7 5 12.5 16 18l8-4v6h2v-7.5zM9 17.5v4c0 1.7 3.1 3.5 7 3.5s7-1.8 7-3.5v-4l-7 3.5z' fill='white'/%3E%3C/svg%3E">
+<script>try { var t = localStorage.getItem("gjub-theme"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<link rel="preload" href="vendor/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/fontawesome/css/fontawesome.min.css">
+<link rel="stylesheet" href="vendor/fontawesome/css/solid.min.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<header class="top">
-  <h1>GJU Internship Board</h1>
-  <p class="lede">Internships and Werkstudent jobs in Germany, collected daily for every GJU major. Filter them, tick the ones you like, then download them as an Excel file.</p>
-  <p id="status" class="status" role="status" aria-live="polite">Loading…</p>
+<a class="skip" href="#results">Skip to the internships</a>
+
+<header class="topbar" id="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top" aria-label="GJU Internship Board, back to the top">
+      <span class="chip-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
+      <span class="brand-text">GJU Internship Board</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#insights">Insights</a>
+      <a href="#filters">Filters</a>
+      <a href="#results">Internships</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-ghost btn-icon" id="open-help" aria-label="How the GJU check works"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="theme-toggle" aria-label="Switch to dark theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+    </div>
+  </div>
 </header>
 
-<main>
-  <section class="card" aria-label="Postings">
-    <div class="bar filters">
-      <input id="q" class="w-search" type="search" placeholder="Search title, company or city" aria-label="Search title, company or city" autocomplete="off">
-      <select id="major" aria-label="Major"></select>
-      <select id="type" aria-label="Position type"></select>
-      <select id="country" aria-label="Country"></select>
-      <select id="german" aria-label="My German level"></select>
-      <select id="english" aria-label="My English level"></select>
-      <select id="gju" aria-label="GJU German Year rules">
-        <option value="">GJU rules: show all</option>
-        <option value="hide-fails">GJU rules: hide breaking ones</option>
-        <option value="meets">GJU rules: only meeting ones</option>
-      </select>
-      <input id="skills" class="w-skills" type="text" list="skill-list" placeholder="Skills, e.g. Python, SQL" aria-label="Skills, comma separated, all must match" autocomplete="off">
-      <datalist id="skill-list"></datalist>
-      <div class="pair" role="group" aria-label="Pay per month in EUR">
-        <input id="min-pay" type="number" min="0" step="50" placeholder="Min €" aria-label="Minimum pay per month in EUR">
-        <input id="max-pay" type="number" min="0" step="50" placeholder="Max €" aria-label="Maximum pay per month in EUR">
-      </div>
-      <label class="date"><span>Seen from</span><input id="from" type="date"></label>
-      <label class="date"><span>to</span><input id="to" type="date"></label>
-      <select id="sort" aria-label="Sort by">
-        <option value="new">Sort: newest first</option>
-        <option value="company">Sort: company A–Z</option>
-        <option value="weeks">Sort: longest duration</option>
-        <option value="pay">Sort: highest pay</option>
-      </select>
-      <button id="reset" type="button" class="btn ghost">Clear filters</button>
+<section class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <span class="orb o1"><i class="fa-solid fa-graduation-cap"></i></span><span class="orb o2"><i class="fa-solid fa-scale-balanced"></i></span>
+    <span class="orb o3"><i class="fa-solid fa-euro-sign"></i></span><span class="orb o4"><i class="fa-solid fa-language"></i></span>
+  </div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow reveal"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> German Year · Internships in Germany</p>
+    <h1 class="reveal" style="--d:1">Find your <span class="grad-text">German Year</span> internship</h1>
+    <p class="lead reveal" style="--d:2">Internships for every GJU major, collected daily and checked against the German Year rules, so you can see at a glance which ones can work for you.</p>
+    <div class="hero-cta reveal" style="--d:3">
+      <a class="btn btn-light" href="#results"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i> Browse internships</a>
+      <button type="button" class="btn btn-glass" id="open-help-2"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> How the check works</button>
     </div>
+    <ul class="stats reveal" style="--d:4" aria-label="At a glance">
+      <li class="stat-tile"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><strong data-stat="total">0</strong><span>internships</span></li>
+      <li class="stat-tile"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><strong data-stat="meets">0</strong><span>meet the rules</span></li>
+      <li class="stat-tile"><i class="fa-solid fa-bolt" aria-hidden="true"></i><strong data-stat="fresh">0</strong><span>new this week</span></li>
+      <li class="stat-tile"><i class="fa-solid fa-building" aria-hidden="true"></i><strong data-stat="companies">0</strong><span>companies</span></li>
+    </ul>
+  </div>
+</section>
 
-    <div class="bar tools" aria-label="Download as Excel">
-      <span class="tools-label">Download as Excel</span>
-      <button id="dl-filter" type="button" class="btn"><span>What I see now (<span id="dl-count">0</span>)</span></button>
-      <button id="dl-selected" type="button" class="btn outline" disabled><span>Ticked (<span id="dl-sel-count">0</span>)</span></button>
-      <button id="dl-all" type="button" class="btn outline">Everything</button>
-      <select id="day" aria-label="Choose a day to download"></select>
-      <button id="dl-day" type="button" class="btn outline">Download that day</button>
+<main class="wrap" id="main">
+  <noscript><p class="empty">This page needs JavaScript to filter and chart the internships.</p></noscript>
+  <p class="notice" id="notice" role="status" hidden></p>
+
+  <section id="insights" aria-labelledby="insights-title">
+    <div class="section-head reveal">
+      <span class="chip-icon"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i></span>
+      <div><h2 id="insights-title">Insights</h2><p>The charts follow your filters. Click a bar or a slice to filter by it.</p></div>
     </div>
-
-    <div class="scroll">
-      <table>
-        <thead>
-          <tr>
-            <th class="check"><input id="select-all" type="checkbox" aria-label="Tick all postings shown"></th>
-            <th>Position</th><th>Company</th><th>City</th><th>Duration</th><th>Pay / month</th><th>German</th><th>English</th><th>GJU rules</th><th>Found</th><th class="act"><span class="sr">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-        <tfoot>
-          <tr><td colspan="11"><div class="foot"><span id="count" aria-live="polite"></span><span id="sel-count"></span></div></td></tr>
-        </tfoot>
-      </table>
+    <div class="chart-grid">
+      <article class="chart-card w5 reveal" data-chart="majors" aria-labelledby="t-majors">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span><div><h3 id="t-majors">Internships by major</h3><p>Top majors in the results</p></div></header>
+        <div class="chart-body"><div class="chart-host" id="ch-majors"></div><div class="chart-empty" hidden><i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>No data for these filters</span></div></div>
+      </article>
+      <article class="chart-card w3 reveal" style="--d:1" data-chart="gju" aria-labelledby="t-gju">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i></span><div><h3 id="t-gju">GJU rules</h3><p>Duration, pay, country</p></div></header>
+        <div class="chart-body">
+          <div class="donut-wrap"><div class="chart-host" id="ch-gju"></div><div class="donut-center" id="gju-center"><strong>0</strong><span>meet the rules</span></div></div>
+          <ul class="legend" id="gju-legend"></ul>
+          <div class="chart-empty" hidden><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>No data for these filters</span></div>
+        </div>
+      </article>
+      <article class="chart-card w4 reveal" style="--d:2" data-chart="skills" aria-labelledby="t-skills">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></span><div><h3 id="t-skills">Most asked skills</h3><p>Click a skill to add it</p></div></header>
+        <div class="chart-body"><div class="chart-host" id="ch-skills"></div><div class="chart-empty" hidden><i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>No skills found for these filters</span></div></div>
+      </article>
+      <article class="chart-card w6 reveal" data-chart="days" aria-labelledby="t-days">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span><div><h3 id="t-days">New internships per day</h3><p>Last 14 days</p></div></header>
+        <div class="chart-body"><div class="chart-host" id="ch-days"></div><div class="chart-empty" hidden><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>No data for these filters</span></div></div>
+      </article>
+      <article class="chart-card w3 reveal" style="--d:1" data-chart="weeks" aria-labelledby="t-weeks">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></span><div><h3 id="t-weeks">Duration</h3><p>Weeks · green reaches 20</p></div></header>
+        <div class="chart-body"><div class="chart-host" id="ch-weeks"></div><div class="chart-empty" hidden><i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>No data for these filters</span></div></div>
+      </article>
+      <article class="chart-card w3 reveal" style="--d:2" data-chart="german" aria-labelledby="t-german">
+        <header class="chart-head"><span class="chip-icon"><i class="fa-solid fa-language" aria-hidden="true"></i></span><div><h3 id="t-german">German required</h3><p>Level the advert asks for</p></div></header>
+        <div class="chart-body"><div class="chart-host" id="ch-german"></div><div class="chart-empty" hidden><i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>No data for these filters</span></div></div>
+      </article>
     </div>
   </section>
-  <p class="more"><button id="more" type="button" class="btn outline" hidden>Show more</button></p>
+
+  <section id="filters" aria-labelledby="filters-title">
+    <details class="panel reveal" id="filter-panel" open>
+      <summary class="panel-head">
+        <span class="chip-icon"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span>
+        <h2 id="filters-title">Filters</h2>
+        <span class="count-badge" id="active-count" hidden>0</span>
+        <span class="hint">Search, pick from the lists, or set a range</span>
+        <i class="fa-solid fa-chevron-down caret" aria-hidden="true"></i>
+      </summary>
+      <div class="panel-body">
+        <div class="filter-grid">
+          <div class="field s4"><label class="field-label" for="q"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</label>
+            <input id="q" class="control" type="search" placeholder="Title, company, city or skill" autocomplete="off" enterkeyhint="search"></div>
+          <div class="field s4" id="f-major"></div>
+          <div class="field s4" id="f-skills"></div>
+          <div class="field" id="f-country"></div>
+          <div class="field" id="f-city"></div>
+          <div class="field" id="f-kind"></div>
+          <div class="field" id="f-gju"></div>
+          <div class="field" id="f-german"></div>
+          <div class="field" id="f-english"></div>
+          <div class="field s2"><label class="field-label" for="min-weeks"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>At least (weeks)</label>
+            <input id="min-weeks" class="control" type="number" inputmode="numeric" min="1" max="104" step="1" placeholder="e.g. 20"></div>
+          <div class="field s2"><label class="field-label" for="min-pay"><i class="fa-solid fa-euro-sign" aria-hidden="true"></i>Pay from (€/month)</label>
+            <input id="min-pay" class="control" type="number" inputmode="numeric" min="0" max="20000" step="50" placeholder="e.g. 861"></div>
+          <div class="field s2"><label class="field-label" for="max-pay"><i class="fa-solid fa-euro-sign" aria-hidden="true"></i>Pay up to (€/month)</label>
+            <input id="max-pay" class="control" type="number" inputmode="numeric" min="0" max="20000" step="50" placeholder="e.g. 1500"></div>
+          <div class="field"><label class="field-label" for="from"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i>Seen from</label>
+            <input id="from" class="control" type="date"></div>
+          <div class="field"><label class="field-label" for="to"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>Seen until</label>
+            <input id="to" class="control" type="date"></div>
+        </div>
+        <div class="active-row" id="active-row" aria-label="Active filters"></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="results" aria-labelledby="results-title">
+    <div class="toolbar reveal">
+      <div class="toolbar-title">
+        <span class="chip-icon"><i class="fa-solid fa-briefcase" aria-hidden="true"></i></span>
+        <div><h2 id="results-title">Internships</h2><p class="result-count" id="result-count" aria-live="polite">Loading…</p></div>
+      </div>
+      <div class="toolbar-tools">
+        <div class="field compact" id="f-sort"></div>
+        <div class="view-toggle" role="group" aria-label="View">
+          <button type="button" id="view-table" aria-pressed="true" aria-label="Table view" title="Table view"><i class="fa-solid fa-table-list" aria-hidden="true"></i></button>
+          <button type="button" id="view-cards" aria-pressed="false" aria-label="Card view" title="Card view"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
+        </div>
+        <label class="pick-all"><input type="checkbox" class="check" id="pick-all"> <span>Tick all shown</span> <span class="ticked" id="ticked" hidden>0</span></label>
+        <button type="button" class="btn btn-primary" id="dl-btn" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Download Excel <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="results" id="list" aria-live="off"></div>
+    <div class="more"><button type="button" class="btn" id="more" hidden><i class="fa-solid fa-angles-down" aria-hidden="true"></i> Show more</button></div>
+  </section>
 </main>
 
-<div id="menu" class="menu" role="menu" hidden>
-  <a id="menu-open" role="menuitem" target="_blank" rel="noopener noreferrer">Open advert</a>
-  <button id="menu-copy" role="menuitem" type="button">Copy link</button>
-</div>
-<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-
-<footer>
-  <p><strong>How to read this.</strong> Duration, pay, language level and country are read from the advert text by fixed rules, not guessed. "Not stated" means the advert did not say. <em>Check</em> under GJU rules means something is missing; open the advert and confirm it yourself. The rules are the 20-week minimum, 861 EUR per month and the approved-country list from the GJU German Year documents. Always check with your department before relying on a posting.</p>
-  <p>Postings are linked to, not copied. No contact details are published. No cookies, no tracking. To have a posting removed, contact the maintainer through the repository.</p>
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <h3>How to read this board</h3>
+      <p>Duration, pay, language level and country are read from the advert text by fixed rules, never guessed. "Not stated" means the advert did not say. <strong>Needs checking</strong> means something is missing: open the advert and confirm it yourself.</p>
+      <p>The GJU check compares each internship with the German Year documents. Always confirm with your department before you rely on a posting.</p>
+    </div>
+    <div>
+      <h3>About the data</h3>
+      <p>Internships are linked to, not copied: every row points to the original advert. No contact details are published. No cookies and no tracking; this page only remembers your theme and view in your own browser.</p>
+      <p>To have an internship removed, contact the maintainer through the repository.</p>
+    </div>
+    <p class="fine">An independent student project. It is not affiliated with, endorsed by or operated by the German Jordanian University.</p>
+  </div>
 </footer>
-<script src="vendor/xlsx.full.min.js"></script>
+
+<div class="menu" id="menu" role="menu" hidden></div>
+
 <script src="board-logic.js"></script>
-<script src="app.js"></script>
+<script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
