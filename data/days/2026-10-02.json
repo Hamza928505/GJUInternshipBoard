@@ -1,0 +1,36 @@
+[
+ {
+  "id": "d2896cfb7e90",
+  "title": "Praktikum \"Marketing, Sponsoring, Event- und Projektmanagement\"",
+  "company": "Handball-Bundesliga GmbH",
+  "city": "Köln",
+  "country": "Germany",
+  "url": "https://www.praktika.de/praktikum/praktikum-marketing-sponsoring-event-und-projektmanagement-140083",
+  "source": "praktika.de",
+  "kind": "Praktikum",
+  "datePosted": "2026-10-02",
+  "firstSeen": "2026-10-02",
+  "lastSeen": "2026-10-10",
+  "majors": [
+   "management-science"
+  ],
+  "skills": [
+   "Microsoft Excel",
+   "Project Management",
+   "Marketing"
+  ],
+  "weeks": {
+   "min": 26,
+   "max": 26
+  },
+  "pay": null,
+  "germanLevel": "unknown",
+  "englishLevel": "B2",
+  "gju": {
+   "weeks": "yes",
+   "pay": "unknown",
+   "country": "approved",
+   "overall": "check"
+  }
+ }
+]
