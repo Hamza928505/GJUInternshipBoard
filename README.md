@@ -24,7 +24,9 @@ published.
 
 | Path | What |
 |---|---|
-| `index.html`, `css/theme.css`, `css/components.css` | The page and its design: tokens for both themes, gradients, animation. |
+| `index.html`, `css/theme.css`, `css/components.css` | The page and its design: tokens for both themes (the blue, navy and amber of gju.edu.jo), gradients, animation. |
+| `guide.html`, `css/guide.css`, `js/guide.js` | The German Year guide: every rule, document and deadline of the 20-week internship, in folding sections. Its numbers (weeks, months) are read from `data/rules.json`. |
+| `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to. They are GJU's documents, copied unchanged. |
 | `js/main.js`, `js/combo.js`, `js/charts.js`, `js/ui.js`, `board-logic.js` | The page's code. `board-logic.js` (filters, facet counts, chart numbers, rule explanations) has no DOM and is unit tested in the private runner repo. |
 | `vendor/` | OpenCharts (bundled) with Chart.js, SweetAlert2, SheetJS, Font Awesome Free. Served from here, so a visitor's browser contacts no other site. See `vendor/README.md`. |
 | `board/majors.json` | The 22 GJU bachelor programs and the job-title words used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included yet. |
@@ -32,7 +34,7 @@ published.
 | `data/postings.json` | Every active internship (dropped after 45 days unseen). |
 | `data/days/YYYY-MM-DD.json` | The internships first published that day (as far as the board knows), for "download one day". |
 | `data/index.json` | Totals, the list of days, what the last run covered, and an optional `notice` shown as a banner. |
-| `data/skills.json`, `data/rules.json` | The skill menu's groups (from the editor's skill library) and the GJU numbers the page explains (copied from the German Year rules file). |
+| `data/skills.json`, `data/rules.json` | The skill menu's groups (from the editor's skill library) and the GJU numbers the pages explain (copied from the German Year rules file). |
 
 ## What is published about an internship
 

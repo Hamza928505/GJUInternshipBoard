@@ -42,7 +42,7 @@ export const theme = {
       button.setAttribute("aria-label", now === "dark" ? "Switch to light theme" : "Switch to dark theme");
     }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = now === "dark" ? "#07121c" : "#0a6aa6";
+    if (meta) meta.content = now === "dark" ? "#091622" : "#1f6bad";
   },
   init() {
     this.paint();

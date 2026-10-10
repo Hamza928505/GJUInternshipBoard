@@ -5,9 +5,9 @@ const L = window.BoardLogic;
 const $ = (id) => document.getElementById(id);
 
 const AXIS = { format: "plain", locale: "", scale: "linear", min: "", max: "" };
-const COLORS = { meets: "#22c55e", check: "#f59e0b", fails: "#ef4444", brand: "#0a89c9", amber: "#f6a800" }; // the blue and the amber of the GJU logo
+const COLORS = { meets: "#22c55e", check: "#f59e0b", fails: "#ef4444", brand: "#1f8bcc", amber: "#f9a61e" }; // the blue and the amber of the GJU website
 const GJU_ORDER = ["meets", "check", "fails"];
-const AREA_COLORS = ["#0a89c9", "#f6a800", "#0a5f96", "#ff8a1f", "#4fc3f0", "#7a8fa3", "#c98300", "#9bd6f2"];
+const AREA_COLORS = ["#1f8bcc", "#ffb844", "#175b92", "#f07f1d", "#a6cae2", "#878585", "#c98300", "#74a5d7"];
 
 /** An area keeps its colour whatever the filters: it comes from the area's place in the majors file, here and in the page's legend. */
 export const areaColor = (area, order) => AREA_COLORS[Math.max(0, order.indexOf(area)) % AREA_COLORS.length];
@@ -18,7 +18,7 @@ const mix = (a, b, t) => {
   return "#" + [0, 1, 2].map((i) => hex(Math.round(c(a, i) + (c(b, i) - c(a, i)) * t))).join("");
 };
 /** n colours from one end to the other, so a ranking reads as a gradient: GJU blue for majors, GJU amber for skills. */
-const BLUES = ["#0a89c9", "#7fd0f5"], AMBERS = ["#f09000", "#ffd36b"];
+const BLUES = ["#1f8bcc", "#a6cae2"], AMBERS = ["#f9a61e", "#ffd89a"];
 const ramp = (n, [from, to]) => Array.from({ length: n }, (_, i) => mix(from, to, n < 2 ? 0 : i / (n - 1)));
 const shorten = (text, max) => (text.length > max ? text.slice(0, max - 1).trimEnd() + "…" : text);
 /** An axis from 0; counts of four or fewer get a 0-5 axis, so the ticks are whole numbers. Larger counts scale themselves. */

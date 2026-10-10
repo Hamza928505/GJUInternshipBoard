@@ -1,6 +1,8 @@
 {
  "minWeeks": 20,
  "minMonthlySalary": 861,
+ "maxRecognisedMonths": 6,
+ "handInMonths": 2,
  "approvedCountries": [
   "Germany",
   "Austria",
