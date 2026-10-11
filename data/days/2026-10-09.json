@@ -30,5 +30,62 @@
    "country": "approved",
    "overall": "check"
   }
+ },
+ {
+  "id": "89c91aa7bb00",
+  "title": "Praktikum in der Softwareentwicklung (m/w/d)",
+  "company": "TNG Technology Consulting",
+  "city": "Germany",
+  "country": "Germany",
+  "url": "https://himalayas.app/companies/tng-technology-consulting/jobs/praktikum-in-der-softwareentwicklung-m-w-d",
+  "source": "Himalayas",
+  "kind": "Praktikum",
+  "datePosted": "2026-10-09",
+  "firstSeen": "2026-10-09",
+  "lastSeen": "2026-10-11",
+  "majors": [
+   "computer-science"
+  ],
+  "skills": [],
+  "weeks": null,
+  "pay": null,
+  "germanLevel": "unknown",
+  "englishLevel": "unknown",
+  "gju": {
+   "weeks": "unknown",
+   "pay": "unknown",
+   "country": "approved",
+   "overall": "check"
+  }
+ },
+ {
+  "id": "05dd6beb20e8",
+  "title": "Accounting Intern",
+  "company": "M365Connect",
+  "city": "Germany",
+  "country": "Germany",
+  "url": "https://himalayas.app/companies/m365connect/jobs/accounting-intern-19197281",
+  "source": "Himalayas",
+  "kind": "Internship",
+  "datePosted": "2026-10-09",
+  "firstSeen": "2026-10-09",
+  "lastSeen": "2026-10-11",
+  "majors": [
+   "international-accounting"
+  ],
+  "skills": [],
+  "weeks": {
+   "min": 26,
+   "max": 26
+  },
+  "pay": null,
+  "germanLevel": "unknown",
+  "englishLevel": "unknown",
+  "gju": {
+   "weeks": "yes",
+   "pay": "unknown",
+   "country": "approved",
+   "overall": "check"
+  }
  }
 ]
