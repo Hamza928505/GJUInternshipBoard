@@ -43,7 +43,7 @@ export async function createCharts({ majorNames, areaOrder = [], onPick }) {
   function show(key, spec, picks) {
     const slot = slots[key];
     slot.picks = picks;
-    if (spec) spec.effects = { gradient: 0.9, glow: 0.45, shadow: 0.4, ...spec.effects }; // fills fade from the colour to a lighter shade
+    if (spec) spec.effects = { gradient: 0.9, glow: 1, shadow: 0.85, ...spec.effects }; // fills fade from the colour to a lighter shade, and glow at the library's maximum
     const nothing = !spec;
     slot.empty.hidden = !nothing;
     slot.host.hidden = nothing;

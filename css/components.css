@@ -92,6 +92,8 @@ main { display: flex; flex-direction: column; gap: 44px; padding-block: 40px 24p
 .chart-body { position: relative; flex: 1; min-height: 224px; }
 .chart-host { width: 100%; }
 .chart-host.is-clickable canvas { cursor: pointer; }
+/* The library caps its own glow, and a line or a pie slice gets almost none of it: the lines and slices of these two charts get a halo from CSS. */
+#ch-days canvas, #ch-areas canvas { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--primary) 70%, transparent)); }
 .chart-empty { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; text-align: center; color: var(--muted); font-size: 13.5px; }
 .chart-empty i { font-size: 26px; opacity: 0.5; }
 .chart-loading, .chart-body .chart-loading { display: grid; place-items: center; min-height: 224px; color: var(--muted); font-size: 13px; }
