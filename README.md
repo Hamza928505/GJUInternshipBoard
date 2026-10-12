@@ -24,8 +24,9 @@ published.
 
 | Path | What |
 |---|---|
-| `index.html`, `css/theme.css`, `css/components.css` | The page and its design: tokens for both themes (the blue, navy and amber of gju.edu.jo), gradients, animation. |
-| `guide.html`, `css/guide.css`, `js/guide.js` | The German Year guide: every rule, document and deadline of the 20-week internship, in folding sections. Its numbers (weeks, months) are read from `data/rules.json`. |
+| `index.html`, `css/guide.css`, `js/guide.js` | The home page, the German Year guide: every rule, document and deadline of the 20-week internship, in folding sections. Its numbers (weeks, months) are read from `data/rules.json`. |
+| `search.html`, `js/search.js`, `css/theme.css`, `css/components.css`, `img/boards/` | Where to find internships: the German job boards (each with its own site icon, saved here so the page loads nothing from other sites) and RSS feeds, what an AI assistant can search, and a tip for writing a CV and cover letter with Claude in Word. The stylesheets hold the design of both pages: tokens for both themes (the blue, navy and amber of gju.edu.jo), gradients, animation. |
+| `.claude/skills/gju-internships/` | A Claude Code skill: searches Indeed (through Claude's Indeed connector) for internships in a GJU major and checks each advert against the German Year rules, quoting the advert for every fact. Run `/gju-internships` in Claude Code inside this folder. It reads its numbers from `data/rules.json` and its search words from `board/majors.json`. |
 | `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to. They are GJU's documents, copied unchanged. |
 | `js/main.js`, `js/combo.js`, `js/charts.js`, `js/ui.js`, `board-logic.js` | The page's code. `board-logic.js` (filters, facet counts, chart numbers, rule explanations) has no DOM and is unit tested in the private runner repo. |
 | `vendor/` | OpenCharts (bundled) with Chart.js, SweetAlert2, SheetJS, Font Awesome Free. Served from here, so a visitor's browser contacts no other site. See `vendor/README.md`. |
@@ -57,7 +58,7 @@ and no personal data. To have an internship removed, open an issue.
 ## Looking at it
 
 Serve this folder with any static file server, for example `python -m http.server`, and open it in a browser
-(opening `index.html` directly does not work: browsers block loading the data files from `file:`). With no `data/`
+(opening `search.html` directly does not work: browsers block loading the data files from `file:`). With no `data/`
 folder the page shows an empty state. To preview it with invented, clearly labelled sample internships, run
 `npm run board:demo -- --out <folder>` in the runner repo and serve that folder.
 
