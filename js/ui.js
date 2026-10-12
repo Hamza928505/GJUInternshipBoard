@@ -87,7 +87,7 @@ export async function pickDay(days) {
   if (!hasSwal()) return null;
   const inputOptions = Object.fromEntries(days.map((d) => [d.date, `${d.date}  ·  ${d.count} ${d.count === 1 ? "internship" : "internships"}`]));
   const result = await window.Swal.fire({
-    ...base(), titleText: "Download one day", text: "The file has the internships first seen on that day.",
+    ...base(), titleText: "Download one day", text: "The file has the internships posted on that day.",
     input: "select", inputOptions, inputPlaceholder: "Choose a day…", showCancelButton: true, confirmButtonText: "Download", cancelButtonText: "Cancel",
     inputValidator: (value) => (value ? undefined : "Choose a day first."),
   });
@@ -133,7 +133,7 @@ export async function showDetails(p, { rules, majorNames, copyLink }) {
   };
   tags("Majors", (p.majors || []).map((id) => majorNames[id] || id), "kind");
   tags("Skills in the advert", p.skills || [], "skill");
-  root.append(el("p", "sub", `First seen ${L.ago(p.firstSeen)} (${p.firstSeen})${p.source ? ` · via ${p.source}` : ""}`));
+  root.append(el("p", "sub", `Posted ${L.ago(p.firstSeen)} (${p.firstSeen})${p.source ? ` · via ${p.source}` : ""}`));
 
   const href = L.safeUrl(p.url);
   const result = await window.Swal.fire({

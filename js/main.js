@@ -138,7 +138,7 @@ function check(id) {
   }
   if (id === "from" || id === "to") {
     const a = $("from").value, b = $("to").value;
-    if (a && b && a > b) return { title: "Check the dates", html: `“Seen from” (<b>${a}</b>) is after “Seen until” (<b>${b}</b>). Swap them or pick another day.` };
+    if (a && b && a > b) return { title: "Check the dates", html: `“Posted from” (<b>${a}</b>) is after “Posted until” (<b>${b}</b>). Swap them or pick another day.` };
   }
   return null;
 }
@@ -207,8 +207,8 @@ function chips() {
   if (f.gju) add("fa-scale-balanced", GJU_CHIP[f.gju], () => change("gju", ""));
   if (f.minWeeks !== "") add("fa-hourglass-half", `At least ${f.minWeeks} weeks`, () => change("minWeeks", ""));
   if (f.minPay !== "" || f.maxPay !== "") add("fa-euro-sign", f.minPay !== "" && f.maxPay !== "" ? `Pay ${f.minPay}–${f.maxPay} €` : f.minPay !== "" ? `Pay from ${f.minPay} €` : `Pay up to ${f.maxPay} €`, () => { f.minPay = ""; f.maxPay = ""; syncControls(); refresh(); });
-  if (f.from) add("fa-calendar-days", `Seen from ${f.from}`, () => change("from", ""));
-  if (f.to) add("fa-calendar-check", `Seen until ${f.to}`, () => change("to", ""));
+  if (f.from) add("fa-calendar-days", `Posted from ${f.from}`, () => change("from", ""));
+  if (f.to) add("fa-calendar-check", `Posted until ${f.to}`, () => change("to", ""));
   return out;
 }
 
@@ -356,7 +356,7 @@ function cardEl(p, i) {
   const langs = el("div", "langs");
   langs.append(langPill("DE", p.germanLevel), langPill("EN", p.englishLevel));
   fact("fa-language", "Languages", langs);
-  fact("fa-clock", "Found", el("span", "when", L.ago(p.firstSeen)));
+  fact("fa-clock", "Posted", el("span", "when", L.ago(p.firstSeen)));
   const foot = el("div", "card-foot");
   foot.append(gjuBadge(p), rowMenu(p));
   const heading = el("h3");
@@ -377,7 +377,7 @@ function createContainer() {
   first.append(el("span", "sr", "Tick"));
   const last = th("", "c-act");
   last.append(el("span", "sr", "Actions"));
-  head.append(first, th("Position"), th("Company"), th("City"), th("Duration"), th("Pay / month"), th("Languages"), th("GJU rules"), th("Found"), last);
+  head.append(first, th("Position"), th("Company"), th("City"), th("Duration"), th("Pay / month"), th("Languages"), th("GJU rules"), th("Posted"), last);
   const thead = el("thead");
   thead.append(head);
   const body = el("tbody");
