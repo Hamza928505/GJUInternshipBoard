@@ -11,6 +11,8 @@ wide monitors, animation that stops under "reduce motion", icons from Font Aweso
 |---|---|
 | `index.html`, `css/guide.css`, `js/guide.js` | The home page, the German Year guide: every rule, document and deadline of the 20-week internship, in folding sections. Its numbers (weeks, months) are read from `data/rules.json`. |
 | `search.html`, `js/search.js`, `css/theme.css`, `css/components.css`, `img/boards/` | Where to find internships: the German job boards (each with its own site icon, saved here so the page loads nothing from other sites) and RSS feeds, what an AI assistant can search, and a tip for writing a CV and cover letter with Claude in Word. The stylesheets hold the design of both pages: tokens for both themes (the blue, navy and amber of gju.edu.jo), gradients, animation. |
+| `editor.html`, `js/editor.js`, `css/editor.css` | Standalone profile editor moved from CareerToAI. Education, experience, projects, certificates, attachments, skills catalogue and radar. Text stays in localStorage, attachments in IndexedDB; JSON exports include both. No backend or API keys. |
+| `js/skill-library.js`, `data/skill-taxonomy.json` | Curated GJU skills and the bundled English/German ESCO catalogue. |
 | `.claude/skills/gju-internships/` | A Claude Code skill: searches Indeed (through Claude's Indeed connector) for internships in a GJU major and checks each advert against the German Year rules, quoting the advert for every fact. Run `/gju-internships` in Claude Code inside this folder. It reads its numbers from `data/rules.json` and its search words from `board/majors.json`. |
 | `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to. They are GJU's documents, copied unchanged. |
 | `js/ui.js` | Shared by both pages: the theme button and the sections that fade in as you scroll. |
@@ -24,6 +26,14 @@ wide monitors, animation that stops under "reduce motion", icons from Font Aweso
 
 Serve this folder with any static file server, for example `python -m http.server`, and open it in a browser.
 Opened straight from `file:`, browsers block the pages' scripts and the guide's `data/rules.json`.
+
+## Profile editor
+
+Open `editor.html` through the static server. Drafts are private to the browser and origin, so download a JSON backup before clearing browser data or moving devices. The editor starts blank and includes no candidate data.
+
+Use **Import .json** in the editor toolbar for a GJUBoard backup or previous CareerToAI export. Choose the JSON file, then confirm **Import profile** to replace the current draft. Existing drafts at CareerToAI's old `/editor/` address can still be downloaded there. GJUBoard uses separate browser storage so it cannot overwrite the old draft. The export format remains version 1, compatible with CareerToAI's `npm run import-data -- <file>`.
+
+The editor uses the existing local SweetAlert2, OpenCharts and Font Awesome bundles and loads no advertising or third-party scripts. Server-only AI extraction, repository saves, private phone storage and base-document uploads remain outside this standalone page.
 
 ## Not done yet
 

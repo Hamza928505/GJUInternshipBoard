@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile editor · GJU Internship Board</title>
+<meta name="description" content="Build your internship profile privately in your browser. Import and export your education, experience, projects and certificates as JSON.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1f6bad">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%231f6bad'/%3E%3Cstop offset='1' stop-color='%231f8bcc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M16 7 5 12.5 16 18l8-4v6h2v-7.5zM9 17.5v4c0 1.7 3.1 3.5 7 3.5s7-1.8 7-3.5v-4l-7 3.5z' fill='white'/%3E%3C/svg%3E">
+<script>try { var t = localStorage.getItem("gjub-theme"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<link rel="preload" href="vendor/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/fontawesome/css/fontawesome.min.css">
+<link rel="stylesheet" href="vendor/fontawesome/css/solid.min.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/editor.css">
+<noscript><style>.reveal { opacity: 1; transform: none; }</style></noscript>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the profile editor</a>
+
+<header class="topbar is-scrolled" id="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="index.html" aria-label="GJU Internship Board home">
+      <span class="chip-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
+      <span class="brand-text">GJU Internship Board</span>
+    </a>
+    <nav class="nav" aria-label="Pages">
+      <a href="index.html">Guide</a>
+      <a href="search.html">Job boards</a>
+      <a href="editor.html" aria-current="page">Profile editor</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="theme-toggle" aria-label="Switch to dark theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap editor-page" id="main">
+<noscript><p>This editor needs JavaScript to save your draft and load JSON files. Enable it to continue.</p></noscript>
+
+
+
+
+
+
+
+
+
+<div class="editor" data-editor>
+  <header class="editor-intro">
+    <h1>Profile editor</h1>
+    <p class="lede">Keep your education, experience, projects and certificates ready for your next application.</p>
+    <p class="muted">Your draft and attachments stay in this browser. Use <strong>Import .json</strong> to restore a backup or continue a CareerToAI profile. Download a JSON backup to move your profile to another device.</p>
+    <details class="editor-intro-help"><summary>Editing and backups</summary>
+      <p>Section headings and entries open and close. Drag a row by its handle, or focus the handle and use the arrow keys, to reorder it. Sort by date puts the newest entries first.</p>
+      <p>Download .json checks required fields and includes attachments. Clearing browser data removes your draft; keep a downloaded backup.</p>
+    </details>
+    <p class="visually-hidden" data-reorder-status role="status" aria-live="polite"></p>
+  </header>
+
+  <div class="editor-toolbar" role="group" aria-label="Import and export profile">
+    <span class="save-status" data-save-status aria-live="polite">Loading…</span>
+    <span class="toolbar-spacer"></span>
+    <button type="button" class="btn" data-action="toggle-all" aria-live="polite"><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+    <button type="button" class="btn" data-action="import"><i class="fa-solid fa-upload" aria-hidden="true" style="margin-right: 0.3rem;"></i>Import .json</button>
+    <button type="button" class="btn" data-action="export"><i class="fa-solid fa-download" style="margin-right: 0.3rem;"></i>Download .json</button>
+    <button type="button" class="btn btn-danger" data-action="reset"><i class="fa-solid fa-trash-can" style="margin-right: 0.3rem;"></i>Clear all</button>
+    <input type="file" accept="application/json,.json" data-import-input hidden>
+  </div>
+
+  <ul class="data-summary" data-summary aria-label="What is loaded"></ul>
+
+  <form class="editor-form" data-form autocomplete="on">
+
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="basics"
+          aria-expanded="true" aria-controls="section-basics">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-user" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Basics
+
+  </button>
+</legend>
+
+      <div class="section-body" id="section-basics">
+        <div class="grid-2">
+          <label>First name <span class="required">required</span>
+            <input type="text" data-path="profile.firstName" autocomplete="given-name" required>
+          </label>
+          <label>Last name <span class="required">required</span>
+            <input type="text" data-path="profile.lastName" autocomplete="family-name" required>
+          </label>
+        </div>
+        <label>Headline <span class="required">required</span>
+          <textarea rows="3" data-path="profile.headline"
+            placeholder="Cloud Infrastructure Engineer" required></textarea>
+          <small>Sits under your name. Line breaks are kept, so you can run it over more than one line.</small>
+        </label>
+        <div class="grid-2">
+          <label>Location <span class="optional">optional</span>
+            <input type="text" data-path="profile.location" placeholder="Amman, Jordan">
+            <small>Leave blank to omit your location.</small>
+          </label>
+          <label>Pronouns <span class="optional">optional</span>
+            <select data-path="profile.pronouns">
+              <option value="">Not specified</option>
+              <option value="he/him">he/him</option>
+              <option value="she/her">she/her</option>
+            </select>
+            <small>Leave as Not specified to omit pronouns.</small>
+          </label>
+        </div>
+        <label>Email
+          <input type="email" data-path="profile.email" autocomplete="email" placeholder="you@example.com">
+          <small>Included in your JSON export. Leave blank to omit your email.</small>
+        </label>
+
+
+        <h3 class="subhead">Languages</h3>
+        <p class="muted">List the languages you can work in and your current level. Only include skills and qualifications you can support.</p>
+        <div data-list="languages" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="languages" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="languages" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-add="languages"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add language</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="about"
+          aria-expanded="true" aria-controls="section-about">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-address-card" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    About
+
+  </button>
+</legend>
+
+      <div class="section-body" id="section-about">
+        <label>About me <span class="required">required</span>
+          <textarea rows="7" data-path="profile.bio" required
+            placeholder="Two to four sentences. Write it the way you would want an AI assistant to summarize you to someone else."></textarea>
+          <small>The single most-quoted piece of text when an assistant summarizes you. State facts, not marketing.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="education"
+          aria-expanded="true" aria-controls="section-education">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-graduation-cap" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Education
+    <span class="section-count" data-section-count="education"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-education">
+        <div data-list="education" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="education" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="education" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-sort="education"><i class="fa-solid fa-arrow-down-short-wide" style="margin-right: 0.3rem;"></i>Sort by date</button>
+
+  <button type="button" class="btn btn-small" data-add="education"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add education</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="experience"
+          aria-expanded="true" aria-controls="section-experience">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-briefcase" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Experience
+    <span class="section-count" data-section-count="experience"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-experience">
+        <div data-list="experience" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="experience" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="experience" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-sort="experience"><i class="fa-solid fa-arrow-down-short-wide" style="margin-right: 0.3rem;"></i>Sort by date</button>
+
+  <button type="button" class="btn btn-small" data-add="experience"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add position</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="projects"
+          aria-expanded="true" aria-controls="section-projects">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-lightbulb" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Projects
+    <span class="section-count" data-section-count="projects"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-projects">
+        <p class="muted">
+          Work you can point at that no employer owns: a side project, a university
+          capstone, an open-source contribution. Published to <code>data/projects.json</code>,
+          to <code>/llms.txt</code>, and as the <em>Independent Projects</em> section of the
+          profile the job-search commands read.
+        </p>
+        <div data-list="projects" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="projects" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="projects" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-sort="projects"><i class="fa-solid fa-arrow-down-short-wide" style="margin-right: 0.3rem;"></i>Sort by date</button>
+
+  <button type="button" class="btn btn-small" data-add="projects"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add project</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="certificates"
+          aria-expanded="true" aria-controls="section-certificates">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-certificate" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Licenses &amp; certifications
+    <span class="section-count" data-section-count="certificates"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-certificates">
+        <div data-list="certificates" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="certificates" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="certificates" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-sort="certificates"><i class="fa-solid fa-arrow-down-short-wide" style="margin-right: 0.3rem;"></i>Sort by date</button>
+
+  <button type="button" class="btn btn-small" data-add="certificates"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add certification</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="links"
+          aria-expanded="true" aria-controls="section-links">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-link" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Links
+    <span class="section-count" data-section-count="links"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-links">
+        <div data-list="links" class="entry-editor-list"></div>
+
+<div class="list-tools">
+  <p class="list-count muted" data-list-count="links" aria-live="polite"></p>
+  <span class="toolbar-spacer"></span><button type="button" class="btn btn-small" data-rows-toggle="links" hidden><i class="fa-solid fa-compress" style="margin-right: 0.3rem;"></i>Collapse all</button>
+
+  <button type="button" class="btn btn-small" data-add="links"><i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>Add link</button>
+</div>
+
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="radar"
+          aria-expanded="true" aria-controls="section-radar">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-chart-pie" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Skills radar
+
+  </button>
+</legend>
+
+      <div class="section-body" id="section-radar">
+        <p class="muted">
+          Your skills by field, from every role, project, certificate and extra skill. Skills you have
+          pasted from job adverts (<strong>From a job ad</strong>) show as a second shape, so the gap
+          between what employers ask and what you can show is visible.
+        </p>
+        <div id="skills-radar" class="skills-radar" role="img" aria-label="Radar chart of your skills by field"></div>
+
+        <div class="radar-notes" data-radar-notes aria-live="polite"></div>
+      </div>
+    </fieldset>
+
+    <fieldset class="collapsible">
+
+<legend>
+  <button type="button" class="section-toggle" data-section-toggle="skills"
+          aria-expanded="true" aria-controls="section-skills">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+    <i class="fa-solid fa-star" style="margin-right: 0.5rem; color: var(--accent);"></i>
+    Extra skills
+    <span class="section-count" data-section-count="skills"></span>
+  </button>
+</legend>
+
+      <div class="section-body" id="section-skills">
+        <p class="muted">
+          Skills that no role, project or certificate already covers. The profile combines these
+          with every skill listed on a position, a project or a certification.
+        </p>
+        <p class="muted">
+          Every skills box takes a whole list at once — paste one skill per line, or
+          comma-separated. <strong><i class="fa-solid fa-list-check"></i> Add skills</strong> browses a catalogue by field and
+          searches it, German labels included. <strong>From a job ad</strong> takes a pasted
+          advert and pulls the skills out of it. The type-ahead offers your own skills first,
+          then ones it has seen in adverts, then the catalogue — and anything you type is
+          accepted whether or not it has heard of it. Duplicates are dropped whatever their
+          capitalisation.
+        </p>
+        <div data-skills="profile.skills"></div>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="editor-help">
+    <h2>What happens to this data</h2>
+    <p>Text is saved in this browser and attachments are stored on this device. This page does not upload your profile or publish it.</p>
+    <p><strong>Download .json</strong> includes your profile and attachments. Use <strong>Import .json</strong> to restore a backup here or on another device. The format is compatible with CareerToAI imports.</p>
+    <p>Review personal details before sharing an export. Private browsing and clearing site data can remove saved drafts.</p>
+  </section>
+</div>
+
+</main>
+<footer class="site-footer"><div class="wrap"><p><a href="index.html">German Year guide</a> · <a href="search.html">Job boards</a></p></div></footer>
+<script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
+<script type="module" src="js/editor.js"></script>
+</body>
+</html>
