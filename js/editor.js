@@ -272,14 +272,77 @@ function setStatus(text, tone = "") {
   statusEl.dataset.tone = tone;
 }
 
-function save() {
+const ENC_PREFIX = "enc:v1:";
+const ENC_ITERATIONS = 250000;
+let cachedPassphrase = null;
+
+function bytesToBase64(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 1) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+function base64ToBytes(base64) {
+  const binary = atob(base64);
+  const out = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) out[i] = binary.charCodeAt(i);
+  return out;
+}
+
+async function deriveAesKey(passphrase, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey("raw", enc.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: ENC_ITERATIONS, hash: "SHA-256" },
+    baseKey,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
+
+async function encryptText(plainText, passphrase) {
+  const enc = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveAesKey(passphrase, salt);
+  const cipherBuf = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(plainText));
+  const payload = {
+    s: bytesToBase64(salt),
+    i: bytesToBase64(iv),
+    c: bytesToBase64(new Uint8Array(cipherBuf)),
+  };
+  return ENC_PREFIX + JSON.stringify(payload);
+}
+
+async function decryptText(payloadText, passphrase) {
+  if (!payloadText.startsWith(ENC_PREFIX)) return payloadText;
+  const payload = JSON.parse(payloadText.slice(ENC_PREFIX.length));
+  const salt = base64ToBytes(payload.s);
+  const iv = base64ToBytes(payload.i);
+  const cipher = base64ToBytes(payload.c);
+  const key = await deriveAesKey(passphrase, salt);
+  const plainBuf = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, cipher);
+  return new TextDecoder().decode(plainBuf);
+}
+
+function getPassphrase() {
+  if (cachedPassphrase) return cachedPassphrase;
+  const value = window.prompt("Enter a passphrase to protect your saved profile data:");
+  if (!value) throw new Error("A passphrase is required to save/load protected data.");
+  cachedPassphrase = value;
+  return cachedPassphrase;
+}
+
+async function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const passphrase = getPassphrase();
+    const encrypted = await encryptText(JSON.stringify(state), passphrase);
+    localStorage.setItem(STORAGE_KEY, encrypted);
     const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     setStatus(`Saved ${now}`, "ok");
   } catch (error) {
-    // Quota, private browsing, or site data blocked. Say so rather than
-    // silently losing the next hour of typing.
+    // Quota, private browsing, crypto unavailable, or site data blocked.
     setStatus("Could not save to this browser — export your .json now", "error");
     console.error("[editor] localStorage write failed:", error);
   }
@@ -288,10 +351,15 @@ function save() {
 function scheduleSave() {
   setStatus("Saving…");
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(save, 400);
+  saveTimer = setTimeout(() => {
+    save().catch((error) => {
+      setStatus("Could not save to this browser — export your .json now", "error");
+      console.error("[editor] async save failed:", error);
+    });
+  }, 400);
 }
 
-function load() {
+async function load() {
   let stored = null;
   try {
     stored = localStorage.getItem(STORAGE_KEY);
@@ -300,10 +368,11 @@ function load() {
   }
   if (!stored) return false;
   try {
-    adoptState(JSON.parse(stored));
+    const text = stored.startsWith(ENC_PREFIX) ? await decryptText(stored, getPassphrase()) : stored;
+    adoptState(JSON.parse(text));
     return true;
   } catch (error) {
-    console.error("[editor] stored data was not valid JSON:", error);
+    console.error("[editor] stored data could not be decrypted/parsed:", error);
     return false;
   }
 }
