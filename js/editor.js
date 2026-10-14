@@ -1912,7 +1912,7 @@ async function importJson(file) {
 // Wiring
 // ---------------------------------------------------------------------------
 
-function init() {
+async function init() {
   const form = root.querySelector("[data-form]");
   form.addEventListener("input", onInput);
   // <select> fires "input" in modern browsers, but "change" is the reliable
@@ -2011,7 +2011,7 @@ function init() {
 
   initSections();
 
-  const restored = load();
+  const restored = await load();
   renderAll();
   setStatus(restored ? "Loaded from this browser" : "Empty — start typing");
 
