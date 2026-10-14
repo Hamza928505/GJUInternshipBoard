@@ -1,40 +1,83 @@
 # GJU German Year Kit
 
-A static site for German Jordanian University students looking for their German Year internship: a guide to every
-rule, document and deadline of the 20-week internship, the German job boards and RSS feeds worth searching, with
-tips on what an AI assistant can and cannot search for you, and a profile editor that saves your whole career as one
-`.json` file to attach to any AI chat. An independent student project, not affiliated with GJU. Light and dark theme, responsive from 320 px phones to
-wide monitors, animation that stops under "reduce motion", icons from Font Awesome Free.
+A free, static website for German Jordanian University (GJU) students planning their German Year internship. It has
+three parts:
 
-## What is here
+- **Guide** (`index.html`): every rule, document and deadline of the 20-week internship, from finding a host to the
+  certificate and report, with the official GJU documents linked from a library section.
+- **Job boards** (`search.html`): the German job boards and RSS feeds worth searching, what an AI assistant can and
+  cannot search for you, and a tip for writing a CV and cover letter with Claude in Word.
+- **Profile editor** (`editor.html`): build your whole career profile in the browser and save it as one `.json` file
+  you can attach to any AI chat.
 
-| Path | What |
-|---|---|
-| `index.html`, `css/guide.css`, `js/guide.js` | The home page, the German Year guide: every rule, document and deadline of the 20-week internship, in folding sections. Its numbers (weeks, months) are read from `data/rules.json`. |
-| `search.html`, `js/search.js`, `css/theme.css`, `css/components.css`, `img/boards/` | Where to find internships: the German job boards (each with its own site icon, saved here so the page loads nothing from other sites) and RSS feeds, what an AI assistant can search, and a tip for writing a CV and cover letter with Claude in Word. The stylesheets hold the design of both pages: tokens for both themes (the blue, navy and amber of gju.edu.jo), gradients, animation. |
-| `editor.html`, `js/editor.js`, `css/editor.css` | Standalone profile editor moved from CareerToAI. Education, experience, projects, certificates, attachments, skills catalogue and radar. Text stays in localStorage, attachments in IndexedDB; JSON exports include both. No backend or API keys. |
-| `js/skill-library.js`, `data/skill-taxonomy.json` | Curated GJU skills and the bundled English/German ESCO catalogue. |
-| `.claude/skills/gju-internships/` | A Claude Code skill: searches Indeed (through Claude's Indeed connector) for internships in a GJU major and checks each advert against the German Year rules, quoting the advert for every fact. Run `/gju-internships` in Claude Code inside this folder. It reads its numbers from `data/rules.json` and its search words from `board/majors.json`. |
-| `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to. They are GJU's documents, copied unchanged. |
-| `js/ui.js` | Shared by both pages: the theme button and the sections that fade in as you scroll. |
-| `vendor/` | OpenCharts (bundled) with Chart.js, SweetAlert2, SheetJS, Font Awesome Free. Served from here, so a visitor's browser contacts no other site. See `vendor/README.md`. |
-| `board/majors.json` | The 22 GJU bachelor programs and the job-title words used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included yet. |
-| `board/skill-aliases.json` | Other ways adverts write a skill (mostly German), mapped to the profile editor's skill names. |
-| `data/rules.json` | The GJU numbers the guide and the skill use (20 weeks, 6 months recognised, 2 months to hand in the report, 861 € a month as proof of funds for a visa extension, the approved countries), copied from the German Year rules. |
+Live at <https://hamza928505.github.io/GJUInternshipBoard/>. An independent student project, not affiliated with,
+endorsed by or operated by GJU. Light and dark theme, responsive from 320 px phones to wide monitors, animation that
+stops under "reduce motion". No build step and no framework: plain HTML, CSS and ES modules.
 
-## Looking at it
+## Run it
 
-Serve this folder with any static file server, for example `python -m http.server`, and open it in a browser.
+Serve this folder with any static file server and open it in a browser:
+
+```
+python -m http.server
+```
+
 Opened straight from `file:`, browsers block the pages' scripts and the guide's `data/rules.json`.
+
+Tests need only Node (no install):
+
+```
+node --test test/editor-import.test.mjs
+```
 
 ## Profile editor
 
-Open `editor.html` through the static server. Drafts are private to the browser and origin, so download a JSON backup before clearing browser data or moving devices. The editor starts blank and includes no candidate data.
+Education, experience, projects, certificates with attachments, and a skills catalogue with a radar chart. It starts
+blank and includes no candidate data. There is no backend and no API key.
 
-Use **Import .json** in the editor toolbar for a German Year Kit backup or previous CareerToAI export. Choose the JSON file; if the editor already holds a draft you are asked to confirm before it is replaced, and an empty editor imports straight away. Existing drafts at CareerToAI's old `/editor/` address can still be downloaded there. The German Year Kit uses separate browser storage so it cannot overwrite the old draft. The export format remains version 1, compatible with CareerToAI's `npm run import-data -- <file>`.
+- **Where data lives.** Text is kept in `localStorage` (key `gjub-profile:v1`), attachments in IndexedDB. Both stay in
+  your browser and origin, so download a JSON backup before clearing browser data or changing device.
+- **Passphrase.** The saved text is encrypted with AES-GCM using a key derived from a passphrase (PBKDF2, 250,000
+  rounds). The editor asks for it with a browser prompt and keeps it only in memory for that tab. Forget it and the
+  saved draft cannot be read, so keep an export. Attachments in IndexedDB and the exported `.json` are not
+  encrypted. A draft saved before encryption was added still loads and is encrypted on its next save.
+- **Export and import.** The export is a version 1 JSON file, compatible with CareerToAI's
+  `npm run import-data -- <file>`. **Import .json** takes a German Year Kit backup or an earlier CareerToAI export. If
+  the editor already holds a draft you are asked to confirm before it is replaced; an empty editor imports straight
+  away. Existing drafts at CareerToAI's old `/editor/` address can still be downloaded there, and this site uses
+  separate storage so it cannot overwrite them.
+- **Third parties.** The editor loads no advertising or third-party scripts. AI extraction, repository saves, phone
+  storage and base-document uploads from CareerToAI are not part of this standalone page.
 
-The editor uses the existing local SweetAlert2, OpenCharts and Font Awesome bundles and loads no advertising or third-party scripts. Server-only AI extraction, repository saves, private phone storage and base-document uploads remain outside this standalone page.
+## Claude Code skill
+
+`.claude/skills/gju-internships/` searches Indeed (through Claude's Indeed connector) for internships in a GJU major
+and checks each advert against the German Year rules: at least 20 weeks, full time, an allowed host and country. It
+quotes the advert for every fact. Run `/gju-internships` in Claude Code inside this folder. It reads its numbers from
+`data/rules.json` and its search words from `board/majors.json`.
+
+## What is where
+
+| Path | What |
+|---|---|
+| `index.html`, `css/guide.css`, `js/guide.js` | The guide. Folding sections; the rule numbers are read from `data/rules.json` and the year's timeline is drawn with OpenCharts. |
+| `search.html`, `js/search.js`, `img/boards/` | The job boards page. Boards and feeds are plain links, so it works without the script. Each board's icon is saved in `img/boards/` so the page loads nothing from other sites. |
+| `editor.html`, `js/editor.js`, `css/editor.css` | The profile editor. |
+| `js/skill-library.js`, `data/skill-taxonomy.json` | Curated GJU skills and the bundled English/German ESCO skills catalogue the editor draws on. |
+| `css/theme.css`, `css/components.css`, `js/ui.js` | Shared by all three pages: design tokens for both themes (the blue, navy and amber of gju.edu.jo), components, the theme button and the fade-in on scroll. |
+| `data/rules.json` | The GJU numbers the guide and the skill use: 20 weeks, 6 months recognised, 2 months to hand in the report, 861 € a month as proof of funds for a visa extension, and the approved countries (Germany, Austria, Switzerland, Luxembourg). |
+| `board/majors.json` | The 22 GJU bachelor programs and the job-title words (German and English) used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included. |
+| `board/skill-aliases.json` | Other ways adverts write a skill (mostly German), mapped to the editor's skill names. |
+| `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to, copied unchanged. |
+| `vendor/` | OpenCharts (with Chart.js), SweetAlert2, SheetJS and Font Awesome Free, served from here. See `vendor/README.md` for versions and licences. |
+| `test/` | The editor's import test. |
+| `sitemap.xml`, `.github/workflows/static.yml` | Search-engine sitemap, and the workflow that publishes the whole repository to GitHub Pages on every push to `main`. |
 
 ## Not done yet
 
-Hosting choice, a privacy and imprint page (required in Germany before launch), and ads or donations.
+- **A privacy statement and an imprint (Impressum).** Required in Germany, and the guide and job boards pages load
+  Google AdSense, so both matter before this is promoted.
+- **Donations.**
+- **`SECURITY.md`** is still GitHub's template text.
+- **Leftovers from the old internship board.** `js/main.js`, `js/combo.js`, `js/charts.js` and `board-logic.js` are no
+  longer loaded by any page, and `vendor/xlsx.full.min.js` (SheetJS) is only needed by them. They can be deleted.
