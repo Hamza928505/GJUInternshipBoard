@@ -609,7 +609,7 @@
 .skills-radar { min-height: 120px; max-width: 640px; margin: 0 auto 1rem; }
 .radar-notes p { margin: .3rem 0; }
 
-/* Reuse GJUBoard's typography, colours and header. */
+/* Reuse the guide's typography, colours and header. */
 .editor-page { padding-top: 2.5rem; padding-bottom: 3rem; }
 .editor-intro { margin-bottom: 1.5rem; }
 .editor-intro h1 { font-size: clamp(2rem, 4vw, 3rem); }

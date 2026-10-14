@@ -1,8 +1,9 @@
-# GJU Internship Board
+# GJU German Year Kit
 
 A static site for German Jordanian University students looking for their German Year internship: a guide to every
-rule, document and deadline of the 20-week internship, and the German job boards and RSS feeds worth searching, with
-tips on what an AI assistant can and cannot search for you. Light and dark theme, responsive from 320 px phones to
+rule, document and deadline of the 20-week internship, the German job boards and RSS feeds worth searching, with
+tips on what an AI assistant can and cannot search for you, and a profile editor that saves your whole career as one
+`.json` file to attach to any AI chat. An independent student project, not affiliated with GJU. Light and dark theme, responsive from 320 px phones to
 wide monitors, animation that stops under "reduce motion", icons from Font Awesome Free.
 
 ## What is here
@@ -16,7 +17,6 @@ wide monitors, animation that stops under "reduce motion", icons from Font Aweso
 | `.claude/skills/gju-internships/` | A Claude Code skill: searches Indeed (through Claude's Indeed connector) for internships in a GJU major and checks each advert against the German Year rules, quoting the advert for every fact. Run `/gju-internships` in Claude Code inside this folder. It reads its numbers from `data/rules.json` and its search words from `board/majors.json`. |
 | `docs/` | The sixteen official GJU and Office for Industrial Links documents the guide is written from and links to. They are GJU's documents, copied unchanged. |
 | `js/ui.js` | Shared by both pages: the theme button and the sections that fade in as you scroll. |
-| `js/main.js`, `js/combo.js`, `js/charts.js`, `board-logic.js` | The old internship board's code. No page loads it any more; its data files have been removed. |
 | `vendor/` | OpenCharts (bundled) with Chart.js, SweetAlert2, SheetJS, Font Awesome Free. Served from here, so a visitor's browser contacts no other site. See `vendor/README.md`. |
 | `board/majors.json` | The 22 GJU bachelor programs and the job-title words used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included yet. |
 | `board/skill-aliases.json` | Other ways adverts write a skill (mostly German), mapped to the profile editor's skill names. |
@@ -31,7 +31,7 @@ Opened straight from `file:`, browsers block the pages' scripts and the guide's 
 
 Open `editor.html` through the static server. Drafts are private to the browser and origin, so download a JSON backup before clearing browser data or moving devices. The editor starts blank and includes no candidate data.
 
-Use **Import .json** in the editor toolbar for a GJUBoard backup or previous CareerToAI export. Choose the JSON file, then confirm **Import profile** to replace the current draft. Existing drafts at CareerToAI's old `/editor/` address can still be downloaded there. GJUBoard uses separate browser storage so it cannot overwrite the old draft. The export format remains version 1, compatible with CareerToAI's `npm run import-data -- <file>`.
+Use **Import .json** in the editor toolbar for a German Year Kit backup or previous CareerToAI export. Choose the JSON file; if the editor already holds a draft you are asked to confirm before it is replaced, and an empty editor imports straight away. Existing drafts at CareerToAI's old `/editor/` address can still be downloaded there. The German Year Kit uses separate browser storage so it cannot overwrite the old draft. The export format remains version 1, compatible with CareerToAI's `npm run import-data -- <file>`.
 
 The editor uses the existing local SweetAlert2, OpenCharts and Font Awesome bundles and loads no advertising or third-party scripts. Server-only AI extraction, repository saves, private phone storage and base-document uploads remain outside this standalone page.
 

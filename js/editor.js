@@ -81,6 +81,8 @@ function blankState() {
 
 let state = blankState();
 
+const draftIsEmpty = () => JSON.stringify(state) === JSON.stringify(blankState());
+
 /** Every repeatable row carries a _key so the DOM can track it across renders. */
 function withKeys(list) {
   return (Array.isArray(list) ? list : []).map((item) => ({ ...item, _key: item._key || uid() }));
@@ -1863,17 +1865,20 @@ async function importJson(file) {
     return alertError("Invalid profile export", "Check the profile, lists and embedded attachments. Your current data has not changed.");
   }
 
-  const confirmed = await Swal.fire({
-    ...dialog,
-    icon: "warning",
-    title: "Replace everything on this page?",
-    text: "Importing a file replaces your current draft. Download a JSON backup first if you want to keep it.",
-    showCancelButton: true,
-    confirmButtonText: "Import profile",
-    cancelButtonText: "Cancel",
-    focusCancel: true,
-  });
-  if (!confirmed.isConfirmed) return;
+  // Nothing to lose on an empty draft, so don't ask.
+  if (!draftIsEmpty()) {
+    const confirmed = await Swal.fire({
+      ...dialog,
+      icon: "warning",
+      title: "Replace everything on this page?",
+      text: "Importing a file replaces your current draft. Download a JSON backup first if you want to keep it.",
+      showCancelButton: true,
+      confirmButtonText: "Import profile",
+      cancelButtonText: "Cancel",
+      focusCancel: true,
+    });
+    if (!confirmed.isConfirmed) return;
+  }
 
   busy("Importing profile…");
   adoptState(payload);
@@ -1976,27 +1981,20 @@ function init() {
     importInput.value = "";
   });
 
-  // Clearing is unrecoverable, so make the user type the word rather than
-  // click twice — a stray double-click should never be able to erase the lot.
+  // Clearing is unrecoverable; focus starts on Cancel so a stray Enter keeps the data.
   root.querySelector("[data-action='reset']").addEventListener("click", async () => {
-    const { value } = await Swal.fire({
+    const { isConfirmed } = await Swal.fire({
       ...dialog,
       icon: "warning",
       title: "Erase everything?",
-      html:
-        "<p class=\"swal-note\">This deletes every field and every uploaded image from this browser. It cannot be undone, and any export you have not downloaded is gone.</p>" +
-        "<p class=\"swal-note\">Type <strong>ERASE</strong> to confirm.</p>",
-      input: "text",
-      inputPlaceholder: "ERASE",
-      inputAttributes: { autocapitalize: "characters", autocorrect: "off" },
+      text: "This deletes every field and every uploaded image from this browser. It cannot be undone, and any export you have not downloaded is gone.",
       showCancelButton: true,
       confirmButtonText: "Erase everything",
       cancelButtonText: "Keep my data",
       focusCancel: true,
       customClass: { ...dialog.customClass, confirmButton: "btn btn-danger" },
-      inputValidator: (v) => (v.trim().toUpperCase() === "ERASE" ? undefined : "Type ERASE to confirm."),
     });
-    if (!value) return;
+    if (!isConfirmed) return;
 
     for (const entry of [...state.experience, ...state.projects, ...state.certificates]) {
       if (entry.imageKey) await deleteImage(entry.imageKey).catch(() => {});

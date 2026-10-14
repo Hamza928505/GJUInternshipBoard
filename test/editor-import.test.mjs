@@ -9,16 +9,18 @@ const start = source.indexOf('async function importJson(file)');
 const end = source.indexOf('// ---------------------------------------------------------------------------', start);
 const importer = source.slice(start, end);
 
-async function check(payload) {
-  let error, prompted = false;
+async function check(payload, empty = false) {
+  let error, prompted = false, adopted = false;
   const context = vm.createContext({
     dialog: {},
+    draftIsEmpty: () => empty,
     alertError: (title, message) => { error = { title, message }; },
-    Swal: { fire: () => { prompted = true; return { isConfirmed: false }; } },
+    Swal: { fire: () => { prompted = true; return { isConfirmed: false }; }, close() {} },
+    busy() {}, adoptState: () => { adopted = true; }, renderAll() {}, save() {}, toast() {},
   });
   vm.runInContext(importer, context);
   await context.importJson({ name: 'profile.json', text: async () => payload });
-  return { error, prompted };
+  return { error, prompted, adopted };
 }
 
 test('accepts version 1 exports and requests confirmation before replacing a draft', async () => {
@@ -35,4 +37,11 @@ test('rejects malformed profiles and remote attachment URLs before changing data
     assert.ok(result.error, payload);
     assert.equal(result.prompted, false);
   }
+});
+
+test('imports straight away when the draft is empty', async () => {
+  const result = await check(JSON.stringify({ version: 1, profile: { firstName: 'Test' } }), true);
+  assert.equal(result.error, undefined);
+  assert.equal(result.prompted, false);
+  assert.equal(result.adopted, true);
 });
