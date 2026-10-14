@@ -276,13 +276,6 @@ function setStatus(text, tone = "") {
 
 const ENC_PREFIX = "enc:v1:";
 const ENC_ITERATIONS = 250000;
-let cachedPassphrase = null;
-
-function bytesToBase64(bytes) {
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += 1) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
-}
 
 function base64ToBytes(base64) {
   const binary = atob(base64);
@@ -303,22 +296,8 @@ async function deriveAesKey(passphrase, salt) {
   );
 }
 
-async function encryptText(plainText, passphrase) {
-  const enc = new TextEncoder();
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await deriveAesKey(passphrase, salt);
-  const cipherBuf = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(plainText));
-  const payload = {
-    s: bytesToBase64(salt),
-    i: bytesToBase64(iv),
-    c: bytesToBase64(new Uint8Array(cipherBuf)),
-  };
-  return ENC_PREFIX + JSON.stringify(payload);
-}
-
+/** Opens a draft saved by the short-lived encrypted save(); drafts are plain JSON again. */
 async function decryptText(payloadText, passphrase) {
-  if (!payloadText.startsWith(ENC_PREFIX)) return payloadText;
   const payload = JSON.parse(payloadText.slice(ENC_PREFIX.length));
   const salt = base64ToBytes(payload.s);
   const iv = base64ToBytes(payload.i);
@@ -328,23 +307,14 @@ async function decryptText(payloadText, passphrase) {
   return new TextDecoder().decode(plainBuf);
 }
 
-function getPassphrase() {
-  if (cachedPassphrase) return cachedPassphrase;
-  const value = window.prompt("Enter a passphrase to protect your saved profile data:");
-  if (!value) throw new Error("A passphrase is required to save/load protected data.");
-  cachedPassphrase = value;
-  return cachedPassphrase;
-}
-
-async function save() {
+function save() {
   try {
-    const passphrase = getPassphrase();
-    const encrypted = await encryptText(JSON.stringify(state), passphrase);
-    localStorage.setItem(STORAGE_KEY, encrypted);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     setStatus(`Saved ${now}`, "ok");
   } catch (error) {
-    // Quota, private browsing, crypto unavailable, or site data blocked.
+    // Quota, private browsing, or site data blocked. Say so rather than
+    // silently losing the next hour of typing.
     setStatus("Could not save to this browser — export your .json now", "error");
     console.error("[editor] localStorage write failed:", error);
   }
@@ -353,12 +323,7 @@ async function save() {
 function scheduleSave() {
   setStatus("Saving…");
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    save().catch((error) => {
-      setStatus("Could not save to this browser — export your .json now", "error");
-      console.error("[editor] async save failed:", error);
-    });
-  }, 400);
+  saveTimer = setTimeout(save, 400);
 }
 
 async function load() {
@@ -370,11 +335,20 @@ async function load() {
   }
   if (!stored) return false;
   try {
-    const text = stored.startsWith(ENC_PREFIX) ? await decryptText(stored, getPassphrase()) : stored;
+    let text = stored;
+    if (stored.startsWith(ENC_PREFIX)) {
+      try {
+        text = await decryptText(stored, window.prompt("This draft was saved with a passphrase. Enter it to open the draft:") || "");
+      } catch (error) {
+        // Keep the encrypted copy: the next save would otherwise overwrite it.
+        try { localStorage.setItem(`${STORAGE_KEY}:locked`, stored); } catch { /* storage unavailable */ }
+        throw error;
+      }
+    }
     adoptState(JSON.parse(text));
     return true;
   } catch (error) {
-    console.error("[editor] stored data could not be decrypted/parsed:", error);
+    console.error("[editor] stored data could not be read:", error);
     return false;
   }
 }

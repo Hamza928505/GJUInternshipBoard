@@ -37,10 +37,10 @@ blank and includes no candidate data. There is no backend and no API key.
 
 - **Where data lives.** Text is kept in `localStorage` (key `gjub-profile:v1`), attachments in IndexedDB. Both stay in
   your browser and origin, so download a JSON backup before clearing browser data or changing device.
-- **Passphrase.** The saved text is encrypted with AES-GCM using a key derived from a passphrase (PBKDF2, 250,000
-  rounds). The editor asks for it with a browser prompt and keeps it only in memory for that tab. Forget it and the
-  saved draft cannot be read, so keep an export. Attachments in IndexedDB and the exported `.json` are not
-  encrypted. A draft saved before encryption was added still loads and is encrypted on its next save.
+- **Not encrypted.** The saved draft, the attachments and the exported `.json` are plain data in your browser, so
+  anyone with access to your browser profile can read them. Do not use the editor on a shared computer. A draft saved
+  during the short time the editor encrypted it with a passphrase still opens (it asks for the passphrase once) and is
+  saved as plain text from then on.
 - **Export and import.** The export is a version 1 JSON file, compatible with CareerToAI's
   `npm run import-data -- <file>`. **Import .json** takes a German Year Kit backup or an earlier CareerToAI export. If
   the editor already holds a draft you are asked to confirm before it is replaced; an empty editor imports straight
