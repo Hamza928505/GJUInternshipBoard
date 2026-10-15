@@ -10,7 +10,7 @@ three parts:
 - **Profile editor** (`editor.html`): build your whole career profile in the browser and save it as one `.json` file
   you can attach to any AI chat.
 
-Live at <https://hamza928505.github.io/GJUInternshipBoard/>. An independent student project, not affiliated with,
+Live at <https://hamza928505.github.io/GJUYearKit/>. An independent student project, not affiliated with,
 endorsed by or operated by GJU. Light and dark theme, responsive from 320 px phones to wide monitors, animation that
 stops under "reduce motion". No build step and no framework: plain HTML, CSS and ES modules.
 
