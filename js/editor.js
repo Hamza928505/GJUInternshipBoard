@@ -307,9 +307,11 @@ async function decryptText(payloadText, passphrase) {
   return new TextDecoder().decode(plainBuf);
 }
 
-function save() {
+async function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const text = JSON.stringify(state);
+    const encrypted = await encryptText(text, window.prompt("Enter a passphrase to save this draft securely:") || "");
+    localStorage.setItem(STORAGE_KEY, encrypted);
     const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     setStatus(`Saved ${now}`, "ok");
   } catch (error) {
@@ -323,7 +325,7 @@ function save() {
 function scheduleSave() {
   setStatus("Saving…");
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(save, 400);
+  saveTimer = setTimeout(() => { void save(); }, 400);
 }
 
 async function load() {
@@ -340,8 +342,10 @@ async function load() {
       try {
         text = await decryptText(stored, window.prompt("This draft was saved with a passphrase. Enter it to open the draft:") || "");
       } catch (error) {
-        // Keep the encrypted copy: the next save would otherwise overwrite it.
-        try { localStorage.setItem(`${STORAGE_KEY}:locked`, stored); } catch { /* storage unavailable */ }
+        // Keep only encrypted copy: avoid writing potential cleartext.
+        if (stored.startsWith(ENC_PREFIX)) {
+          try { localStorage.setItem(`${STORAGE_KEY}:locked`, stored); } catch { /* storage unavailable */ }
+        }
         throw error;
       }
     }
