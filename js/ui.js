@@ -221,6 +221,16 @@ document.addEventListener("keydown", (e) => {
 window.addEventListener("resize", () => closeMenu(false));
 document.addEventListener("scroll", (e) => { if (!e.target.closest?.("#menu")) closeMenu(false); }, true);
 
+// ---------------------------------------------------------------- the page menu on phones
+
+const navToggle = $("nav-toggle");
+const setNav = (open) => { $("topbar").classList.toggle("nav-open", open); navToggle.setAttribute("aria-expanded", String(open)); };
+const navOpen = () => navToggle?.getAttribute("aria-expanded") === "true";
+navToggle?.addEventListener("click", () => setNav(!navOpen()));
+$("nav")?.addEventListener("click", (e) => { if (e.target.closest("a")) setNav(false); });
+document.addEventListener("pointerdown", (e) => { if (navOpen() && !e.target.closest("#topbar")) setNav(false); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && navOpen()) { setNav(false); navToggle.focus(); } });
+
 // ---------------------------------------------------------------- copy, counters, scroll reveal
 
 export async function copyText(text) {
