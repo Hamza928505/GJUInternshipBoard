@@ -64,7 +64,7 @@ quotes the advert for every fact. Run `/gju-internships` in Claude Code inside t
 | `search.html`, `js/search.js`, `img/boards/` | The job boards page. Boards and feeds are plain links, so it works without the script. Each board's icon is saved in `img/boards/` so the page loads nothing from other sites. |
 | `editor.html`, `js/editor.js`, `css/editor.css` | The profile editor. |
 | `js/skill-library.js`, `data/skill-taxonomy.json` | Curated GJU skills and the bundled English/German ESCO skills catalogue the editor draws on. |
-| `css/theme.css`, `css/components.css`, `js/ui.js` | Shared by all three pages: design tokens for both themes (the blue, navy and amber of gju.edu.jo), components, the theme button and the fade-in on scroll. |
+| `css/theme.css`, `css/components.css`, `js/ui.js` | Shared by all three pages: design tokens for both themes (the blue, navy and amber of gju.edu.jo), components, the theme button, the phone menu and the fade-in on scroll. |
 | `data/rules.json` | The GJU numbers the guide and the skill use: 20 weeks, 6 months recognised, 2 months to hand in the report, 861 € a month as proof of funds for a visa extension, and the approved countries (Germany, Austria, Switzerland, Luxembourg). |
 | `board/majors.json` | The 22 GJU bachelor programs and the job-title words (German and English) used to find internships for them. Program names are from <https://www.gju.edu.jo/gju-programs>. **Keywords are suggestions to review.** Master programs are not included. |
 | `board/skill-aliases.json` | Other ways adverts write a skill (mostly German), mapped to the editor's skill names. |
@@ -75,8 +75,6 @@ quotes the advert for every fact. Run `/gju-internships` in Claude Code inside t
 
 ## Not done yet
 
-- **A privacy statement and an imprint (Impressum).** Required in Germany, and the guide and job boards pages load
-  Google AdSense, so both matter before this is promoted.
 - **Donations.**
 - **`SECURITY.md`** is still GitHub's template text.
 - **Leftovers from the old internship board.** `js/main.js`, `js/combo.js`, `js/charts.js` and `board-logic.js` are no
